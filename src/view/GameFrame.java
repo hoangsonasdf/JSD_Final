@@ -79,14 +79,15 @@ public class GameFrame extends JFrame {
     }
 
     private void updateGame() {
-        for (EnemyTank enemyTank : enemyTanks) {
+        Iterator<EnemyTank> iterator = enemyTanks.iterator();
+        while (iterator.hasNext()) {
+            EnemyTank enemyTank = iterator.next();
             if (enemyTank.isActive()) {
                 enemyTank.move();
             } else {
                 this.remove(enemyTank);
-                enemyTanks.remove(enemyTank);
+                iterator.remove();
             }
         }
-
     }
 }
