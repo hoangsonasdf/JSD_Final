@@ -89,36 +89,8 @@ public class PlayerTank extends Tank {
                 position.setX(position.getX() + movementSpeed);
                 break;
         }
-        Component collidedComponent = checkCollision();
-        boolean shouldRevertPosition = false;
 
-        if (collidedComponent != null) {
-            if (collidedComponent instanceof Enviroment) {
-                Enviroment environment = (Enviroment) collidedComponent;
-                if (!environment.isCanPass()) {
-                    shouldRevertPosition = true;
-                }
-            }
-            if (collidedComponent instanceof HomeBase){
-                shouldRevertPosition = true;
-            }
-            if (collidedComponent instanceof PowerUp){
-                PowerUp powerUp = (PowerUp) collidedComponent;
-                powerUp.active(this);
-                this.repaint();
-                this.getParent().remove(powerUp);
-            }
-            if (collidedComponent instanceof EnemyTank){
-                EnemyTank enemyTank = (EnemyTank) collidedComponent;
-                enemyTank.explode();
-            }
-        }
-
-        if (shouldRevertPosition) {
-            position.setX(oldPosition.getX());
-            position.setY(oldPosition.getY());
-            isColliding = true;
-        }
+        handleCollision(oldPosition);
         checkBounds();
         updatePanelPosition();
     }
@@ -149,6 +121,40 @@ public class PlayerTank extends Tank {
         }
         else if (position.getY() + tankHeight > frameHeight) {
             position.setY(frameHeight - tankHeight);
+        }
+    }
+
+    @Override
+    public void handleCollision(Position oldPosition) {
+        Component collidedComponent = checkCollision();
+        boolean shouldRevertPosition = false;
+
+        if (collidedComponent != null) {
+            if (collidedComponent instanceof Enviroment) {
+                Enviroment environment = (Enviroment) collidedComponent;
+                if (!environment.isCanPass()) {
+                    shouldRevertPosition = true;
+                }
+            }
+            if (collidedComponent instanceof HomeBase){
+                shouldRevertPosition = true;
+            }
+            if (collidedComponent instanceof PowerUp){
+                PowerUp powerUp = (PowerUp) collidedComponent;
+                powerUp.active(this);
+                this.repaint();
+                this.getParent().remove(powerUp);
+            }
+            if (collidedComponent instanceof EnemyTank){
+                EnemyTank enemyTank = (EnemyTank) collidedComponent;
+                enemyTank.explode();
+            }
+        }
+
+        if (shouldRevertPosition) {
+            position.setX(oldPosition.getX());
+            position.setY(oldPosition.getY());
+            isColliding = true;
         }
     }
 

@@ -1,9 +1,12 @@
 package gamecomponent.tank;
 
+import gamecomponent.HomeBase;
 import gamecomponent.Position;
+import gamecomponent.enviroment.Enviroment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +19,7 @@ public class EnemyTank extends Tank {
     private Random random = new Random();
     @Override
     public void move() {
+        Position oldPosition = new Position(position.getX(), position.getY());
         switch (direction) {
             case U:
                 position.setY(position.getY() - movementSpeed);
@@ -32,6 +36,7 @@ public class EnemyTank extends Tank {
             default:
                 throw new IllegalStateException("Unexpected value: " + direction);
         }
+        handleCollision(oldPosition);
         checkBounds();
         updatePanelPosition();
     }
@@ -56,6 +61,31 @@ public class EnemyTank extends Tank {
         } else if (position.getY() + tankHeight > frameHeight) {
             position.setY(frameHeight - tankHeight);
             changeDirection();
+        }
+    }
+
+    @Override
+    public void handleCollision(Position oldPosition) {
+        Component collidedComponent = checkCollision();
+        boolean shouldRevertPosition = false;
+
+        if (collidedComponent != null) {
+            if (collidedComponent instanceof Enviroment) {
+                Enviroment environment = (Enviroment) collidedComponent;
+                if (!environment.isCanPass()) {
+                    shouldRevertPosition = true;
+                }
+            }
+            if (collidedComponent instanceof HomeBase){
+                shouldRevertPosition = true;
+            }
+
+        }
+
+        if (shouldRevertPosition) {
+            this.setPosition(oldPosition);
+            changeDirection();
+            isColliding = true;
         }
     }
 

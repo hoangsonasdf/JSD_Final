@@ -6,15 +6,20 @@ import gamecomponent.enviroment.BrickWall;
 import gamecomponent.enviroment.Tree;
 import gamecomponent.powerup.Grenade;
 import gamecomponent.powerup.Helmet;
+import gamecomponent.tank.ArmorTank;
 import gamecomponent.tank.BasicTank;
+import gamecomponent.tank.EnemyTank;
 import gamecomponent.tank.PlayerTank;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 public class GameFrame extends JFrame {
     private PlayerTank playerTank;
-    private BasicTank basicTank;
-
+    private List<EnemyTank> enemyTanks = new ArrayList<>();
     private BrickWall brickWall;
     private Grenade grenade;
     private Tree tree;
@@ -49,9 +54,15 @@ public class GameFrame extends JFrame {
         playerTank.setBounds(playerTank.getPosition().getX(), playerTank.getPosition().getY(), playerTank.getImageSize().width, playerTank.getImageSize().height);
         add(playerTank);
 
-        basicTank = new BasicTank(new Position(300, 300));
+        BasicTank basicTank = new BasicTank(new Position(300, 300));
         basicTank.setBounds(basicTank.getPosition().getX(), basicTank.getPosition().getY(), basicTank.getImageSize().width, basicTank.getImageSize().height);
         add(basicTank);
+        enemyTanks.add(basicTank);
+
+        ArmorTank armorTank = new ArmorTank(new Position(400, 350));
+        armorTank.setBounds(armorTank.getPosition().getX(), armorTank.getPosition().getY(), armorTank.getImageSize().width, armorTank.getImageSize().height);
+        add(armorTank);
+        enemyTanks.add(armorTank);
 
 
         setVisible(true);
@@ -68,6 +79,14 @@ public class GameFrame extends JFrame {
     }
 
     private void updateGame() {
-        basicTank.move();
+        for (EnemyTank enemyTank : enemyTanks) {
+            if (enemyTank.isActive()) {
+                enemyTank.move();
+            } else {
+                this.remove(enemyTank);
+                enemyTanks.remove(enemyTank);
+            }
+        }
+
     }
 }

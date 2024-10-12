@@ -4,6 +4,7 @@ import gamecomponent.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ultil.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,10 +23,12 @@ public abstract class Tank extends JPanel {
     protected int bulletSpeed;
     protected Map<Direction, Image> images = new HashMap<>();
     protected boolean isColliding = false;
+    private boolean isActive;
 
 
     public Tank(Position position) {
         this.position = position;
+        this.isActive = true;
         setOpaque(false);
         setLayout(null);
     }
@@ -82,13 +85,25 @@ public abstract class Tank extends JPanel {
     }
 
     public void explode() {
-        JLabel explosion = new JLabel(new ImageIcon("images/10.gif"));
-        explosion.setBounds(position.getX(), position.getY(),
-                getImageSize().width, getImageSize().height);
-        this.getParent().add(explosion);
-        this.getParent().remove(this);
-        this.getParent().remove(explosion);
+        this.isActive = false;
+        if (getParent() != null) {
+            Container parent = getParent();
+            ExplosionEffect explosionEffect = new ExplosionEffect(getPosition());
+            explosionEffect.setBounds(getX(), getY(), getWidth(), getHeight());
+            parent.add(explosionEffect);
+            parent.remove(this);
+            parent.revalidate();
+            parent.repaint();
 
-
+            SoundPlayer.playSound("sounds/explosion.wav");
+            Timer timer = new Timer(1000, e -> {
+                parent.remove(explosionEffect);
+                parent.revalidate();
+                parent.repaint();
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
     }
+    public abstract void handleCollision(Position oldPosition);
 }
