@@ -12,6 +12,8 @@ import gamecomponent.tank.EnemyTank;
 import gamecomponent.tank.PlayerTank;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -79,6 +81,7 @@ public class GameFrame extends JFrame {
     }
 
     private void updateGame() {
+        playerTank.updateBullets();
         Iterator<EnemyTank> iterator = enemyTanks.iterator();
         while (iterator.hasNext()) {
             EnemyTank enemyTank = iterator.next();

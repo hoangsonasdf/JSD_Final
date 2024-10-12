@@ -23,6 +23,8 @@ public class PlayerTank extends Tank {
     private boolean shield;
     private int numberOfBulletPerShoot;
     private boolean upgradedBullet;
+    private boolean upPressed, downPressed, leftPressed, rightPressed;
+    Timer moveTimer = new Timer(16, e -> move());
 
 
     public PlayerTank(Position position) {
@@ -41,54 +43,80 @@ public class PlayerTank extends Tank {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-                        setDirection(Direction.U);
-                        move();
+                        direction = Direction.U;
+                        moveTimer.start();
+                        upPressed = true;
                         break;
                     case KeyEvent.VK_DOWN:
-                        setDirection(Direction.D);
-                        move();
+                        direction = Direction.D;
+                        moveTimer.start();
+                        downPressed = true;
                         break;
                     case KeyEvent.VK_LEFT:
-                        setDirection(Direction.L);
-                        move();
+                        direction = Direction.L;
+                        moveTimer.start();
+                        leftPressed = true;
                         break;
                     case KeyEvent.VK_RIGHT:
-                        setDirection(Direction.R);
-                        move();
+                        direction = Direction.R;
+                        moveTimer.start();
+                        rightPressed = true;
+                        break;
+                    case KeyEvent.VK_SPACE:
+                        fire();
                         break;
                 }
 
                 repaint();
             }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP:
+                        upPressed = false;
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        downPressed = false;
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        leftPressed = false;
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        rightPressed = false;
+                        break;
+                }
+            }
         });
         setFocusable(true);
+        requestFocusInWindow();
     }
 
-    public void shoot() {
-        Bullet bullet = new Bullet(this);
-        getParent().add(bullet);
-        bullet.setBounds(bullet.getPosition().getX(), bullet.getPosition().getY(), 10, 10);
-        bullet.move();
-        bullet.repaint();
-    }
 
     @Override
     public void move() {
         Position oldPosition = new Position(position.getX(), position.getY());
-        switch (direction) {
-            case U:
-                position.setY(position.getY() - movementSpeed);
-                break;
-            case D:
-                position.setY(position.getY() + movementSpeed);
-                break;
-            case L:
-                position.setX(position.getX() - movementSpeed);
-                break;
-            case R:
-                position.setX(position.getX() + movementSpeed);
-                break;
+        int dx = 0, dy = 0;
+
+        if (upPressed) {
+            dy -= movementSpeed;
+            direction = Direction.U;
         }
+        if (downPressed) {
+            dy += movementSpeed;
+            direction = Direction.D;
+        }
+        if (leftPressed) {
+            dx -= movementSpeed;
+            direction = Direction.L;
+        }
+        if (rightPressed) {
+            dx += movementSpeed;
+            direction = Direction.R;
+        }
+
+        position.setX(position.getX() + dx);
+        position.setY(position.getY() + dy);
 
         handleCollision(oldPosition);
         checkBounds();
@@ -112,14 +140,12 @@ public class PlayerTank extends Tank {
 
         if (position.getX() < 0) {
             position.setX(0);
-        }
-        else if (position.getX() + tankWidth > frameWidth) {
+        } else if (position.getX() + tankWidth > frameWidth) {
             position.setX(frameWidth - tankWidth);
         }
         if (position.getY() < 0) {
             position.setY(0);
-        }
-        else if (position.getY() + tankHeight > frameHeight) {
+        } else if (position.getY() + tankHeight > frameHeight) {
             position.setY(frameHeight - tankHeight);
         }
     }
@@ -136,16 +162,16 @@ public class PlayerTank extends Tank {
                     shouldRevertPosition = true;
                 }
             }
-            if (collidedComponent instanceof HomeBase){
+            if (collidedComponent instanceof HomeBase) {
                 shouldRevertPosition = true;
             }
-            if (collidedComponent instanceof PowerUp){
+            if (collidedComponent instanceof PowerUp) {
                 PowerUp powerUp = (PowerUp) collidedComponent;
                 powerUp.active(this);
                 this.repaint();
                 this.getParent().remove(powerUp);
             }
-            if (collidedComponent instanceof EnemyTank){
+            if (collidedComponent instanceof EnemyTank) {
                 EnemyTank enemyTank = (EnemyTank) collidedComponent;
                 enemyTank.explode();
             }
@@ -154,7 +180,6 @@ public class PlayerTank extends Tank {
         if (shouldRevertPosition) {
             position.setX(oldPosition.getX());
             position.setY(oldPosition.getY());
-            isColliding = true;
         }
     }
 
@@ -175,7 +200,7 @@ public class PlayerTank extends Tank {
 
     private void drawShield(Graphics2D g2d) {
         Stroke oldStroke = g2d.getStroke();
-        g2d.setColor(Color.BLUE);
+        g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(2.0f));
 
         int shieldRadius = Math.max(getWidth(), getHeight()) / 2 + 5;
@@ -194,19 +219,19 @@ public class PlayerTank extends Tank {
 
     public void updateTierState() {
         if (this.tier == 1) {
-            this.bulletSpeed = 1;
+            this.bulletSpeed = 6;
             this.numberOfBulletPerShoot = 1;
             this.upgradedBullet = false;
         } else if (this.tier == 2) {
-            this.bulletSpeed = 3;
+            this.bulletSpeed = 8;
             this.numberOfBulletPerShoot = 1;
             this.upgradedBullet = false;
         } else if (this.tier == 3) {
-            this.bulletSpeed = 3;
+            this.bulletSpeed = 8;
             this.numberOfBulletPerShoot = 2;
             this.upgradedBullet = false;
         } else {
-            this.bulletSpeed = 3;
+            this.bulletSpeed = 8;
             this.numberOfBulletPerShoot = 2;
             this.upgradedBullet = true;
         }
@@ -217,4 +242,6 @@ public class PlayerTank extends Tank {
             this.tier++;
         }
     }
+
+
 }

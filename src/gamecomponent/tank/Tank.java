@@ -8,7 +8,9 @@ import ultil.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @Data
@@ -22,8 +24,9 @@ public abstract class Tank extends JPanel {
     protected int movementSpeed;
     protected int bulletSpeed;
     protected Map<Direction, Image> images = new HashMap<>();
-    protected boolean isColliding = false;
     private boolean isActive;
+    private boolean isShooting;
+    private java.util.List<Bullet> bullets = new ArrayList<>();
 
 
     public Tank(Position position) {
@@ -106,4 +109,34 @@ public abstract class Tank extends JPanel {
         }
     }
     public abstract void handleCollision(Position oldPosition);
+    public void fire() {
+        Bullet bullet = new Bullet(this);
+        bullet.setPosition(new Position(this.getPosition().getX() + getWidth() / 2 - bullet.getWidth() / 2,
+                this.getPosition().getY() + getHeight() / 2 - bullet.getHeight() / 2));
+        bullets.add(bullet);
+        SoundPlayer.playSound("sounds/fire.wav");
+        if (getParent() != null) {
+            getParent().add(bullet);
+            getParent().setComponentZOrder(bullet, 0);
+            getParent().repaint();
+        }
+    }
+    public void updateBullets() {
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            if (bullet.isActive()) {
+                bullet.move();
+                bullet.checkBounds();
+            } else {
+                if (getParent() != null) {
+                    getParent().remove(bullet);
+                }
+                iterator.remove();
+            }
+        }
+        if (getParent() != null) {
+            getParent().repaint();
+        }
+    }
 }

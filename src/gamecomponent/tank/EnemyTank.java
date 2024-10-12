@@ -33,8 +33,6 @@ public class EnemyTank extends Tank {
             case R:
                 position.setX(position.getX() + movementSpeed);
                 break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + direction);
         }
         handleCollision(oldPosition);
         checkBounds();
@@ -85,7 +83,6 @@ public class EnemyTank extends Tank {
         if (shouldRevertPosition) {
             this.setPosition(oldPosition);
             changeDirection();
-            isColliding = true;
         }
     }
 
