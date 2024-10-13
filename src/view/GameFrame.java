@@ -4,6 +4,7 @@ import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.BrickWall;
 import gamecomponent.enviroment.Tree;
+import gamecomponent.inputhandler.PlayerInputHandler;
 import gamecomponent.powerup.Grenade;
 import gamecomponent.powerup.Helmet;
 import gamecomponent.tank.ArmorTank;
@@ -12,8 +13,6 @@ import gamecomponent.tank.EnemyTank;
 import gamecomponent.tank.PlayerTank;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.List;
 
 public class GameFrame extends JFrame {
     private PlayerTank playerTank;
+    private PlayerInputHandler playerInputHandler;
     private List<EnemyTank> enemyTanks = new ArrayList<>();
     private BrickWall brickWall;
     private Grenade grenade;
@@ -32,9 +32,9 @@ public class GameFrame extends JFrame {
         setLayout(null);
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        homeBase = new HomeBase(new Position(15, 15));
-        homeBase.setBounds(homeBase.getPosition().getX(), homeBase.getPosition().getY(), homeBase.getImageSize().width, homeBase.getImageSize().height);
-        add(homeBase);
+//        homeBase = new HomeBase(new Position(15, 15));
+//        homeBase.setBounds(homeBase.getPosition().getX(), homeBase.getPosition().getY(), homeBase.getImageSize().width, homeBase.getImageSize().height);
+//        add(homeBase);
 
         brickWall = new BrickWall(new Position(200, 200));
         brickWall.setBounds(brickWall.getPosition().getX(), brickWall.getPosition().getY(), brickWall.getImageSize().width, brickWall.getImageSize().height);
@@ -66,7 +66,12 @@ public class GameFrame extends JFrame {
         add(armorTank);
         enemyTanks.add(armorTank);
 
+        playerInputHandler = new PlayerInputHandler(playerTank);
+        addKeyListener(playerInputHandler);
 
+
+        setFocusable(true);
+        requestFocus();
         setVisible(true);
         setResizable(false);
         startGame();

@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 
 @Data
@@ -21,9 +19,7 @@ public class PlayerTank extends Tank {
     private int life;
     private int tier;
     private boolean shield;
-    private int numberOfBulletPerShoot;
     private boolean upgradedBullet;
-    private boolean upPressed, downPressed, leftPressed, rightPressed;
     Timer moveTimer = new Timer(16, e -> move());
 
 
@@ -38,85 +34,26 @@ public class PlayerTank extends Tank {
         loadImages();
         updateTierState();
         this.setSize(getImageSize());
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        direction = Direction.U;
-                        moveTimer.start();
-                        upPressed = true;
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        direction = Direction.D;
-                        moveTimer.start();
-                        downPressed = true;
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        direction = Direction.L;
-                        moveTimer.start();
-                        leftPressed = true;
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        direction = Direction.R;
-                        moveTimer.start();
-                        rightPressed = true;
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        fire();
-                        break;
-                }
-
-                repaint();
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        upPressed = false;
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        downPressed = false;
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        leftPressed = false;
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        rightPressed = false;
-                        break;
-                }
-            }
-        });
-        setFocusable(true);
-        requestFocusInWindow();
     }
 
 
     @Override
     public void move() {
         Position oldPosition = new Position(position.getX(), position.getY());
-        int dx = 0, dy = 0;
-
-        if (upPressed) {
-            dy -= movementSpeed;
-            direction = Direction.U;
+        switch (direction) {
+            case U:
+                position.setY(position.getY() - movementSpeed);
+                break;
+            case D:
+                position.setY(position.getY() + movementSpeed);
+                break;
+            case L:
+                position.setX(position.getX() - movementSpeed);
+                break;
+            case R:
+                position.setX(position.getX() + movementSpeed);
+                break;
         }
-        if (downPressed) {
-            dy += movementSpeed;
-            direction = Direction.D;
-        }
-        if (leftPressed) {
-            dx -= movementSpeed;
-            direction = Direction.L;
-        }
-        if (rightPressed) {
-            dx += movementSpeed;
-            direction = Direction.R;
-        }
-
-        position.setX(position.getX() + dx);
-        position.setY(position.getY() + dy);
 
         handleCollision(oldPosition);
         checkBounds();

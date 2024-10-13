@@ -23,10 +23,13 @@ public abstract class Tank extends JPanel {
     protected int health;
     protected int movementSpeed;
     protected int bulletSpeed;
+    protected int numberOfBulletPerShoot;
     protected Map<Direction, Image> images = new HashMap<>();
     private boolean isActive;
     private boolean isShooting;
     private java.util.List<Bullet> bullets = new ArrayList<>();
+    private long lastFireTime = 0;
+    private static final long FIRE_COOLDOWN = 1000;
 
 
     public Tank(Position position) {
@@ -108,19 +111,58 @@ public abstract class Tank extends JPanel {
             timer.start();
         }
     }
+
     public abstract void handleCollision(Position oldPosition);
-    public void fire() {
-        Bullet bullet = new Bullet(this);
-        bullet.setPosition(new Position(this.getPosition().getX() + getWidth() / 2 - bullet.getWidth() / 2,
-                this.getPosition().getY() + getHeight() / 2 - bullet.getHeight() / 2));
-        bullets.add(bullet);
-        SoundPlayer.playSound("sounds/fire.wav");
-        if (getParent() != null) {
-            getParent().add(bullet);
-            getParent().setComponentZOrder(bullet, 0);
-            getParent().repaint();
+
+    public void attempFire() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastFireTime >= FIRE_COOLDOWN) {
+            for (int i = 0; i < numberOfBulletPerShoot; i++) {
+                fire(i);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            lastFireTime = currentTime;
         }
     }
+
+    private void fire(int bulletIndex) {
+        int tankCenterX = position.getX() + getWidth() / 2;
+        int tankCenterY = position.getY() + getHeight() / 2;
+        int bulletOffset = 10;
+
+        Position bulletPosition = new Position(position.getX(), position.getY());
+
+        switch (direction) {
+            case U:
+                bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                bulletPosition.setY(position.getY());
+                break;
+            case D:
+                bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                bulletPosition.setY(position.getY() + getHeight());
+                break;
+            case L:
+                bulletPosition.setX(position.getX());
+                bulletPosition.setY(tankCenterY + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                break;
+            case R:
+                bulletPosition.setX(position.getX() + getWidth());
+                bulletPosition.setY(tankCenterY + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                break;
+        }
+
+        Bullet bullet = new Bullet(this);
+        bullet.setPosition(bulletPosition);
+        bullet.setDirection(direction);
+        bullet.setSpeed(bulletSpeed);
+        bullets.add(bullet);
+        getParent().add(bullet);
+    }
+
     public void updateBullets() {
         Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
