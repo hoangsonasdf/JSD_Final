@@ -19,12 +19,13 @@ public class Bullet extends JPanel {
     private Direction direction;
     private int speed;
     private boolean isActive;
+    private Tank shotBy;
     private Map<Direction, Image> images = new HashMap<>();
 
-    public Bullet(Tank shootBy){
-        this.position = new Position(shootBy.getPosition().getX(), shootBy.getPosition().getY());
-        this.direction = shootBy.getDirection();
-        this.speed = shootBy.getBulletSpeed();
+    public Bullet(Tank shotBy){
+        this.shotBy = shotBy;
+        this.direction = shotBy.getDirection();
+        this.speed = shotBy.getBulletSpeed();
         this.isActive = true;
         loadImages();
         setSize(getImageSize());
@@ -65,11 +66,27 @@ public class Bullet extends JPanel {
             }
         }
 
-        if (collidedComponent instanceof EnemyTank){
+        if (this.shotBy instanceof PlayerTank && collidedComponent instanceof EnemyTank){
+            this.isActive = false;
             EnemyTank enemyTank = (EnemyTank) collidedComponent;
             enemyTank.setHealth(enemyTank.getHealth() - 1);
             if (enemyTank.getHealth() == 0){
                 enemyTank.explode();
+            }
+        }
+
+        if (this.shotBy instanceof EnemyTank && collidedComponent instanceof PlayerTank){
+            this.isActive = false;
+            PlayerTank playerTank = (PlayerTank) collidedComponent;
+            playerTank.setHealth(playerTank.getHealth() - 1);
+            if (playerTank.getHealth() == 0){
+                playerTank.setLife(playerTank.getLife() -1);
+                playerTank.explode();
+                playerTank.setActive(false);
+
+                if (playerTank.getLife() == 0){
+                    JOptionPane.showMessageDialog(getParent(),"Leu leu thua roi");
+                }
             }
         }
     }

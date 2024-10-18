@@ -119,17 +119,14 @@ public abstract class Tank extends JPanel {
         if (currentTime - lastFireTime >= FIRE_COOLDOWN) {
             for (int i = 0; i < numberOfBulletPerShoot; i++) {
                 fire(i);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
             }
             lastFireTime = currentTime;
         }
     }
 
     private void fire(int bulletIndex) {
+        Bullet bullet = new Bullet(this);
+
         int tankCenterX = position.getX() + getWidth() / 2;
         int tankCenterY = position.getY() + getHeight() / 2;
         int bulletOffset = 10;
@@ -139,14 +136,14 @@ public abstract class Tank extends JPanel {
         switch (direction) {
             case U:
                 bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
-                bulletPosition.setY(position.getY());
+                bulletPosition.setY(position.getY() - bullet.getImageSize().height);
                 break;
             case D:
                 bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
                 bulletPosition.setY(position.getY() + getHeight());
                 break;
             case L:
-                bulletPosition.setX(position.getX());
+                bulletPosition.setX(position.getX() - bullet.getImageSize().width);
                 bulletPosition.setY(tankCenterY + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
                 break;
             case R:
@@ -155,18 +152,29 @@ public abstract class Tank extends JPanel {
                 break;
         }
 
-        Bullet bullet = new Bullet(this);
         bullet.setPosition(bulletPosition);
-        bullet.setDirection(direction);
-        bullet.setSpeed(bulletSpeed);
+        bullet.setSize(bullet.getImageSize());
+        bullet.setBounds(bulletPosition.getX(), bulletPosition.getY(),
+                bullet.getImageSize().width, bullet.getImageSize().height);
+        SoundPlayer.playSound("sounds/fire.wav");
         bullets.add(bullet);
-        getParent().add(bullet);
+
+        if (getParent() != null) {
+            getParent().add(bullet);
+            getParent().repaint();
+        }
     }
+
+
 
     public void updateBullets() {
         Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
+            if(!this.isActive){
+                bullet.setActive(false);
+                getParent().remove(bullet);
+            }
             if (bullet.isActive()) {
                 bullet.move();
                 bullet.checkBounds();

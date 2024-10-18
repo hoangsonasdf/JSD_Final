@@ -20,7 +20,6 @@ public class PlayerTank extends Tank {
     private int tier;
     private boolean shield;
     private boolean upgradedBullet;
-    Timer moveTimer = new Timer(16, e -> move());
 
 
     public PlayerTank(Position position) {
@@ -156,19 +155,19 @@ public class PlayerTank extends Tank {
 
     public void updateTierState() {
         if (this.tier == 1) {
-            this.bulletSpeed = 6;
+            this.bulletSpeed = 10;
             this.numberOfBulletPerShoot = 1;
             this.upgradedBullet = false;
         } else if (this.tier == 2) {
-            this.bulletSpeed = 8;
+            this.bulletSpeed = 12;
             this.numberOfBulletPerShoot = 1;
             this.upgradedBullet = false;
         } else if (this.tier == 3) {
-            this.bulletSpeed = 8;
+            this.bulletSpeed = 12;
             this.numberOfBulletPerShoot = 2;
             this.upgradedBullet = false;
         } else {
-            this.bulletSpeed = 8;
+            this.bulletSpeed = 12;
             this.numberOfBulletPerShoot = 2;
             this.upgradedBullet = true;
         }

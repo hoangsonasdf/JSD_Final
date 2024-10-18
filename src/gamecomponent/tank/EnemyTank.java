@@ -17,6 +17,7 @@ import java.util.Random;
 @AllArgsConstructor
 public class EnemyTank extends Tank {
     private Random random = new Random();
+
     @Override
     public void move() {
         Position oldPosition = new Position(position.getX(), position.getY());
@@ -29,7 +30,7 @@ public class EnemyTank extends Tank {
                 break;
             case L:
                 position.setX(position.getX() - movementSpeed);
-                break;
+                 break;
             case R:
                 position.setX(position.getX() + movementSpeed);
                 break;
@@ -94,9 +95,11 @@ public class EnemyTank extends Tank {
     public EnemyTank(Position position) {
         super(position);
         this.direction = Direction.D;
+        this.numberOfBulletPerShoot = 1;
         loadImages();
         this.setSize(getImageSize());
     }
+
 
     @Override
     public void loadImages() {

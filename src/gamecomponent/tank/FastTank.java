@@ -10,6 +10,6 @@ public class FastTank extends EnemyTank{
         this.point = 200;
         this.health = 1;
         this.movementSpeed = 7;
-        this.bulletSpeed = 6;
+        this.bulletSpeed = 11;
     }
 }
