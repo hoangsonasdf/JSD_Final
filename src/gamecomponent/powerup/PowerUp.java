@@ -18,13 +18,14 @@ public abstract class PowerUp extends JPanel {
     public PowerUp(Position position){
         this.position = position;
         this.setSize(getImageSize());
+        setBounds(this.position.getX(), this.position.getY(), this.getImageSize().width, this.getImageSize().height);
     }
 
     public Dimension getImageSize() {
         if (image != null) {
             return new Dimension(image.getWidth(null), image.getHeight(null));
         }
-        return new Dimension(50, 50);
+        return new Dimension(35, 35);
     }
 
     @Override

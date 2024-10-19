@@ -78,7 +78,9 @@ public class EnemyTank extends Tank {
             if (collidedComponent instanceof HomeBase){
                 shouldRevertPosition = true;
             }
-
+            if (collidedComponent instanceof Tank) {
+                shouldRevertPosition = true;
+            }
         }
 
         if (shouldRevertPosition) {

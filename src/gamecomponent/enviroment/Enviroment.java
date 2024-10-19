@@ -18,6 +18,7 @@ public abstract class Enviroment extends JPanel {
     public Enviroment(Position position){
         this.position = position;
         this.setSize(getImageSize());
+        setBounds(this.position.getX(), this.position.getY(), this.getImageSize().width, this.getImageSize().height);
     }
 
     public Enviroment(){
@@ -27,7 +28,7 @@ public abstract class Enviroment extends JPanel {
         if (image != null) {
             return new Dimension(image.getWidth(null), image.getHeight(null));
         }
-        return new Dimension(50, 50);
+        return new Dimension(35, 35);
     }
 
     @Override
