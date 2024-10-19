@@ -17,13 +17,14 @@ public class HomeBase extends JPanel {
     public HomeBase(Position position){
         this.position = position;
         this.image = new ImageIcon("images/home.jpg").getImage();
-        setSize(this. getImageSize());
+        setSize(this.getImageSize());
+        setBounds(this.position.getX(), this.position.getY(), this.getImageSize().width, this.getImageSize().height);
     }
     public Dimension getImageSize() {
         if (image != null) {
             return new Dimension(image.getWidth(null), image.getHeight(null));
         }
-        return new Dimension(50, 50);
+        return new Dimension(35, 35);
     }
     @Override
     public void paintComponent(Graphics g) {

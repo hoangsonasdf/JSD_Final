@@ -1,6 +1,8 @@
 package gamecomponent.tank;
 
 import gamecomponent.Position;
+import gamecomponent.enviroment.BrickWall;
+import gamecomponent.enviroment.CompositeBrickWall;
 import gamecomponent.enviroment.Enviroment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +24,7 @@ public class Bullet extends JPanel {
     private Tank shotBy;
     private Map<Direction, Image> images = new HashMap<>();
 
-    public Bullet(Tank shotBy){
+    public Bullet(Tank shotBy) {
         this.shotBy = shotBy;
         this.direction = shotBy.getDirection();
         this.speed = shotBy.getBulletSpeed();
@@ -38,7 +40,7 @@ public class Bullet extends JPanel {
         this.images.put(Direction.R, new ImageIcon("images/bulletR.gif").getImage());
     }
 
-    public void move(){
+    public void move() {
         switch (direction) {
             case U:
                 position.setY(position.getY() - speed);
@@ -59,33 +61,35 @@ public class Bullet extends JPanel {
 
     private void handleCollision() {
         Component collidedComponent = checkCollision();
-        if (collidedComponent instanceof Enviroment){
+
+
+        if (collidedComponent instanceof Enviroment) {
             Enviroment enviroment = (Enviroment) collidedComponent;
-            if (enviroment.isCanDestroy()){
+            if (enviroment.isCanDestroy()) {
+                this.isActive = false;
                 enviroment.destroy();
             }
         }
 
-        if (this.shotBy instanceof PlayerTank && collidedComponent instanceof EnemyTank){
+        if (this.shotBy instanceof PlayerTank && collidedComponent instanceof EnemyTank) {
             this.isActive = false;
             EnemyTank enemyTank = (EnemyTank) collidedComponent;
             enemyTank.setHealth(enemyTank.getHealth() - 1);
-            if (enemyTank.getHealth() == 0){
+            if (enemyTank.getHealth() == 0) {
                 enemyTank.explode();
             }
         }
 
-        if (this.shotBy instanceof EnemyTank && collidedComponent instanceof PlayerTank){
+        if (this.shotBy instanceof EnemyTank && collidedComponent instanceof PlayerTank) {
             this.isActive = false;
             PlayerTank playerTank = (PlayerTank) collidedComponent;
-            playerTank.setHealth(playerTank.getHealth() - 1);
-            if (playerTank.getHealth() == 0){
-                playerTank.setLife(playerTank.getLife() -1);
-                playerTank.explode();
-                playerTank.setActive(false);
-
-                if (playerTank.getLife() == 0){
-                    JOptionPane.showMessageDialog(getParent(),"Leu leu thua roi");
+            if (playerTank.isShield()) {
+                playerTank.setShield(false);
+            } else {
+                playerTank.setHealth(playerTank.getHealth() - 1);
+                if (playerTank.getHealth() == 0) {
+                    playerTank.setLife(playerTank.getLife() - 1);
+                    playerTank.explode();
                 }
             }
         }
@@ -95,7 +99,7 @@ public class Bullet extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Image bulletImage = this.images.get(this.direction);
-        if (bulletImage != null){
+        if (bulletImage != null) {
             g.drawImage(bulletImage, 0, 0, this.getWidth(), this.getHeight(), null);
         }
     }
@@ -118,6 +122,7 @@ public class Bullet extends JPanel {
             getParent().remove(this);
         }
     }
+
     public Dimension getImageSize() {
         Image tankImage = this.images.get(this.direction);
         if (tankImage != null) {
@@ -125,6 +130,7 @@ public class Bullet extends JPanel {
         }
         return new Dimension(10, 10);
     }
+
     public boolean checkCollisionWith(Component other) {
         if (other == this) return false;
         Rectangle tankBounds = new Rectangle(

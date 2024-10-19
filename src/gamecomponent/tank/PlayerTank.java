@@ -24,6 +24,7 @@ public class PlayerTank extends Tank {
 
     public PlayerTank(Position position) {
         super(position);
+        this.life = 4;
         this.direction = Direction.U;
         this.point = 0;
         this.health = 1;
@@ -107,9 +108,8 @@ public class PlayerTank extends Tank {
                 this.repaint();
                 this.getParent().remove(powerUp);
             }
-            if (collidedComponent instanceof EnemyTank) {
-                EnemyTank enemyTank = (EnemyTank) collidedComponent;
-                enemyTank.explode();
+            if (collidedComponent instanceof Tank) {
+                shouldRevertPosition = true;
             }
         }
 

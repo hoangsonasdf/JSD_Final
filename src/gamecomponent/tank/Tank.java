@@ -37,6 +37,7 @@ public abstract class Tank extends JPanel {
         this.isActive = true;
         setOpaque(false);
         setLayout(null);
+        setBounds(this.position.getX(), this.position.getY(), this.getImageSize().width, this.getImageSize().height);
     }
 
     public abstract void move();
@@ -48,7 +49,7 @@ public abstract class Tank extends JPanel {
         if (tankImage != null) {
             return new Dimension(tankImage.getWidth(null), tankImage.getHeight(null));
         }
-        return new Dimension(50, 50);
+        return new Dimension(35, 35);
     }
 
     protected void updatePanelPosition() {
@@ -171,10 +172,6 @@ public abstract class Tank extends JPanel {
         Iterator<Bullet> iterator = bullets.iterator();
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
-            if(!this.isActive){
-                bullet.setActive(false);
-                getParent().remove(bullet);
-            }
             if (bullet.isActive()) {
                 bullet.move();
                 bullet.checkBounds();
