@@ -166,6 +166,10 @@ public class GameFrame extends JFrame {
         if (isGameOver) {
             return;
         }
+        if (homeBase.getHealth() <= 0){
+            gameOver();
+        }
+
         if (playerTank != null) {
             playerTank.updateBullets();
             if (!playerTank.isActive() && !respawnTimer.isRunning()) {

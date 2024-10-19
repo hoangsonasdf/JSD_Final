@@ -1,5 +1,6 @@
 package gamecomponent.tank;
 
+import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.BrickWall;
 import gamecomponent.enviroment.CompositeBrickWall;
@@ -69,6 +70,12 @@ public class Bullet extends JPanel {
                 this.isActive = false;
                 enviroment.destroy();
             }
+        }
+
+        if (this.shotBy instanceof EnemyTank && collidedComponent instanceof HomeBase) {
+            this.isActive = false;
+            HomeBase homeBase = (HomeBase) collidedComponent;
+            homeBase.setHealth(homeBase.getHealth() - 1);
         }
 
         if (this.shotBy instanceof PlayerTank && collidedComponent instanceof EnemyTank) {

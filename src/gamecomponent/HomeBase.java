@@ -11,10 +11,12 @@ import java.awt.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HomeBase extends JPanel {
+    private int health;
     private Position position;
     private Image image;
 
     public HomeBase(Position position){
+        this.health = 4;
         this.position = position;
         this.image = new ImageIcon("images/home.jpg").getImage();
         setSize(this.getImageSize());
