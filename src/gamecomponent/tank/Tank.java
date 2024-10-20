@@ -4,6 +4,7 @@ import gamecomponent.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import manager.BulletManager;
 import ultil.SoundPlayer;
 
 import javax.swing.*;
@@ -27,7 +28,6 @@ public abstract class Tank extends JPanel {
     protected Map<Direction, Image> images = new HashMap<>();
     private boolean isActive;
     private boolean isShooting;
-    private java.util.List<Bullet> bullets = new ArrayList<>();
     private long lastFireTime = 0;
     private static final long FIRE_COOLDOWN = 1000;
 
@@ -157,8 +157,8 @@ public abstract class Tank extends JPanel {
         bullet.setSize(bullet.getImageSize());
         bullet.setBounds(bulletPosition.getX(), bulletPosition.getY(),
                 bullet.getImageSize().width, bullet.getImageSize().height);
+        BulletManager.getInstance().addBullet(bullet);
         SoundPlayer.playSound("sounds/fire.wav");
-        bullets.add(bullet);
 
         if (getParent() != null) {
             getParent().add(bullet);
@@ -167,23 +167,4 @@ public abstract class Tank extends JPanel {
     }
 
 
-
-    public void updateBullets() {
-        Iterator<Bullet> iterator = bullets.iterator();
-        while (iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            if (bullet.isActive()) {
-                bullet.move();
-                bullet.checkBounds();
-            } else {
-                if (getParent() != null) {
-                    getParent().remove(bullet);
-                }
-                iterator.remove();
-            }
-        }
-        if (getParent() != null) {
-            getParent().repaint();
-        }
-    }
 }

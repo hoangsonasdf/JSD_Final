@@ -9,6 +9,7 @@ import gamecomponent.powerup.Grenade;
 import gamecomponent.powerup.Helmet;
 import gamecomponent.powerup.Star;
 import gamecomponent.tank.*;
+import manager.BulletManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -163,6 +164,7 @@ public class GameFrame extends JFrame {
     }
 
     private void updateGame() {
+        BulletManager.getInstance().updateBullets(this);
         if (isGameOver) {
             return;
         }
@@ -171,7 +173,6 @@ public class GameFrame extends JFrame {
         }
 
         if (playerTank != null) {
-            playerTank.updateBullets();
             if (!playerTank.isActive() && !respawnTimer.isRunning()) {
                 if (playerTank.getLife() <= 0) {
                     gameOver();
@@ -184,7 +185,6 @@ public class GameFrame extends JFrame {
         Iterator<EnemyTank> iterator = enemyTanks.iterator();
         while (iterator.hasNext()) {
             EnemyTank enemyTank = iterator.next();
-            enemyTank.updateBullets();
             if (enemyTank.isActive()) {
                 enemyTank.move();
                 if (random.nextInt(100) < 5) {
