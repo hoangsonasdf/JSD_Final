@@ -1,5 +1,6 @@
 package gamecomponent.tank;
 
+import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.Enviroment;

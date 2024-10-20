@@ -1,10 +1,11 @@
 package view;
 
+import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.CompositeBrickWall;
 import gamecomponent.enviroment.Tree;
-import gamecomponent.inputhandler.PlayerInputHandler;
+import gamecomponent.inputhandler.KeyStateHandler;
 import gamecomponent.powerup.Grenade;
 import gamecomponent.powerup.Helmet;
 import gamecomponent.powerup.Star;
@@ -13,6 +14,7 @@ import manager.BulletManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,12 +22,17 @@ import java.util.Random;
 
 
 public class GameFrame extends JFrame {
+    private final int numberOfPlayers;
     private Random random = new Random();
     Position spawnPosition = new Position(100, 100);
-    private PlayerTank playerTank;
-    private PlayerInputHandler playerInputHandler;
-    private List<EnemyTank> enemyTanks = new ArrayList<>();  // Tank đang trong game
-    private List<EnemyTank> availableTanks = new ArrayList<>();  // Tank chưa xuất hiện
+    private PlayerTank playerOne;
+    private PlayerTank playerTwo;
+    private KeyStateHandler keyStateHandler;
+    private Timer inputTimer;
+    private Position playerOneSpawnPosition = new Position(100, 500);
+    private Position playerTwoSpawnPosition = new Position(700, 500);
+    private List<EnemyTank> enemyTanks = new ArrayList<>();
+    private List<EnemyTank> availableTanks = new ArrayList<>();
     private Grenade grenade;
     private Tree tree;
     private Helmet helmet;
@@ -36,12 +43,16 @@ public class GameFrame extends JFrame {
     private HomeBase homeBase;
     private boolean isGameOver = false;
     private Timer enemyRespawnTimer;
-    private int maxEnemyTanks = 4;
     private int maxActiveTanks = 2;
     private Timer respawnTimer;
     private Timer gameTimer;
 
-    public GameFrame() {
+    public GameFrame(int numberOfPlayers) {
+        if (numberOfPlayers < 1 || numberOfPlayers > 2) {
+            throw new IllegalArgumentException("Number of players must be 1 or 2");
+        }
+
+        this.numberOfPlayers = numberOfPlayers;
         setLayout(null);
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,8 +82,16 @@ public class GameFrame extends JFrame {
         add(star2);
 
 
-        playerTank = new PlayerTank(spawnPosition);
-        add(playerTank);
+        keyStateHandler = new KeyStateHandler();
+        addKeyListener(keyStateHandler);
+
+        playerOne = new PlayerTank(playerOneSpawnPosition, PlayerTankEnum.PLAYER1);
+
+        add(playerOne);
+        if (numberOfPlayers == 2){
+            playerTwo = new PlayerTank(playerTwoSpawnPosition, PlayerTankEnum.PLAYER2);
+            add(playerTwo);
+        }
 
         availableTanks.add(new BasicTank(new Position(300, 300)));
         availableTanks.add(new ArmorTank(new Position(400, 350)));
@@ -82,8 +101,8 @@ public class GameFrame extends JFrame {
         spawnRandomEnemyTank();
         spawnRandomEnemyTank();
 
-        playerInputHandler = new PlayerInputHandler(playerTank);
-        addKeyListener(playerInputHandler);
+        inputTimer = new Timer(16, e -> handleInput()); // 60 FPS
+        inputTimer.start();
 
         respawnTimer = new Timer(3000, e -> {
             respawnPlayer();
@@ -105,20 +124,79 @@ public class GameFrame extends JFrame {
         startGame();
     }
 
+    private void handleInput() {
+        if (playerOne != null && playerOne.isActive()) {
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_UP)) {
+                playerOne.setDirection(Direction.U);
+                playerOne.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_DOWN)) {
+                playerOne.setDirection(Direction.D);
+                playerOne.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_LEFT)) {
+                playerOne.setDirection(Direction.L);
+                playerOne.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_RIGHT)) {
+                playerOne.setDirection(Direction.R);
+                playerOne.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_ENTER)) {
+                playerOne.attempFire();
+            }
+        }
+
+        if (numberOfPlayers == 2 && playerTwo != null && playerTwo.isActive()) {
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_W)) {
+                playerTwo.setDirection(Direction.U);
+                playerTwo.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_S)) {
+                playerTwo.setDirection(Direction.D);
+                playerTwo.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_A)) {
+                playerTwo.setDirection(Direction.L);
+                playerTwo.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_D)) {
+                playerTwo.setDirection(Direction.R);
+                playerTwo.move();
+            }
+            if (keyStateHandler.isKeyPressed(KeyEvent.VK_SPACE)) {
+                playerTwo.attempFire();
+            }
+        }
+    }
+
     private void respawnPlayer() {
-        if (playerTank.getLife() > 0) {
-            PlayerTank newPlayerTank = new PlayerTank(spawnPosition);
-            newPlayerTank.setLife(playerTank.getLife());
-            newPlayerTank.setPoint(playerTank.getPoint());
-            newPlayerTank.setTier(playerTank.getTier());
+        if (playerOne != null && !playerOne.isActive()) {
+            if (playerOne.getLife() > 0) {
+                PlayerTank newPlayerOne = new PlayerTank(playerOneSpawnPosition, PlayerTankEnum.PLAYER1);
+                newPlayerOne.setLife(playerOne.getLife());
+                newPlayerOne.setPoint(playerOne.getPoint());
+                newPlayerOne.setTier(playerOne.getTier());
 
-            playerTank = newPlayerTank;
-            add(playerTank);
+                remove(playerOne);
+                playerOne = newPlayerOne;
+                add(playerOne);
+                playerOne.updateTierState();
+            }
+        }
 
-            playerInputHandler.setPlayerTank(playerTank);
+        if (numberOfPlayers == 2 && playerTwo != null && !playerTwo.isActive()) {
+            if (playerTwo.getLife() > 0) {
+                PlayerTank newPlayerTwo = new PlayerTank(playerTwoSpawnPosition,PlayerTankEnum.PLAYER2);
+                newPlayerTwo.setLife(playerTwo.getLife());
+                newPlayerTwo.setPoint(playerTwo.getPoint());
+                newPlayerTwo.setTier(playerTwo.getTier());
 
-            requestFocus();
-            repaint();
+                remove(playerTwo);
+                playerTwo = newPlayerTwo;
+                add(playerTwo);
+                playerTwo.updateTierState();
+            }
         }
     }
 
@@ -149,15 +227,13 @@ public class GameFrame extends JFrame {
 
     private void spawnRandomEnemyTank() {
         if (availableTanks.size() > 0 && enemyTanks.size() < maxActiveTanks) {
-            // Chọn ngẫu nhiên 1 tank từ availableTanks
+
             int randomIndex = random.nextInt(availableTanks.size());
             EnemyTank tank = availableTanks.get(randomIndex);
 
-            // Thêm tank vào danh sách đang hoạt động
             enemyTanks.add(tank);
             availableTanks.remove(randomIndex);
 
-            // Thêm tank vào frame
             add(tank);
             repaint();
         }
@@ -172,14 +248,9 @@ public class GameFrame extends JFrame {
             gameOver();
         }
 
-        if (playerTank != null) {
-            if (!playerTank.isActive() && !respawnTimer.isRunning()) {
-                if (playerTank.getLife() <= 0) {
-                    gameOver();
-                } else {
-                    respawnTimer.start();
-                }
-            }
+        if ((!playerOne.isActive() || (numberOfPlayers == 2 && !playerTwo.isActive())) &&
+                !respawnTimer.isRunning()) {
+            respawnTimer.start();
         }
 
         Iterator<EnemyTank> iterator = enemyTanks.iterator();
@@ -199,5 +270,16 @@ public class GameFrame extends JFrame {
         }
 
         repaint();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (inputTimer != null) {
+            inputTimer.stop();
+        }
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
     }
 }

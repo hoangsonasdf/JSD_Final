@@ -1,9 +1,8 @@
 package gamecomponent.tank;
 
+import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
-import gamecomponent.enviroment.BrickWall;
-import gamecomponent.enviroment.CompositeBrickWall;
 import gamecomponent.enviroment.Enviroment;
 import lombok.AllArgsConstructor;
 import lombok.Data;

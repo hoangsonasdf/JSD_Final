@@ -1,5 +1,6 @@
 package gamecomponent.tank;
 
+import gamecomponent.Direction;
 import gamecomponent.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +10,7 @@ import ultil.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 @Data

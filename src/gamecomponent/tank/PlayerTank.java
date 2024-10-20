@@ -1,5 +1,6 @@
 package gamecomponent.tank;
 
+import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.Enviroment;
@@ -20,10 +21,12 @@ public class PlayerTank extends Tank {
     private int tier;
     private boolean shield;
     private boolean upgradedBullet;
+    private PlayerTankEnum playerTankEnum;
 
 
-    public PlayerTank(Position position) {
+    public PlayerTank(Position position, PlayerTankEnum playerTankEnum) {
         super(position);
+        this.playerTankEnum = playerTankEnum;
         this.life = 4;
         this.direction = Direction.U;
         this.point = 0;
@@ -62,10 +65,18 @@ public class PlayerTank extends Tank {
 
     @Override
     public void loadImages() {
-        this.images.put(Direction.U, new ImageIcon("images/HtankU.gif").getImage());
-        this.images.put(Direction.D, new ImageIcon("images/HtankD.gif").getImage());
-        this.images.put(Direction.L, new ImageIcon("images/HtankL.gif").getImage());
-        this.images.put(Direction.R, new ImageIcon("images/HtankR.gif").getImage());
+        if (playerTankEnum == PlayerTankEnum.PLAYER1) {
+            this.images.put(Direction.U, new ImageIcon("images/HtankU.gif").getImage());
+            this.images.put(Direction.D, new ImageIcon("images/HtankD.gif").getImage());
+            this.images.put(Direction.L, new ImageIcon("images/HtankL.gif").getImage());
+            this.images.put(Direction.R, new ImageIcon("images/HtankR.gif").getImage());
+        }
+        else {
+            this.images.put(Direction.U, new ImageIcon("images/HtankU2.gif").getImage());
+            this.images.put(Direction.D, new ImageIcon("images/HtankD2.gif").getImage());
+            this.images.put(Direction.L, new ImageIcon("images/HtankL2.gif").getImage());
+            this.images.put(Direction.R, new ImageIcon("images/HtankR2.gif").getImage());
+        }
     }
 
     @Override
