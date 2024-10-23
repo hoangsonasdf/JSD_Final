@@ -25,11 +25,13 @@ public abstract class Enviroment extends JPanel {
 
     }
     public Dimension getImageSize() {
-        if (image != null) {
-            return new Dimension(image.getWidth(null), image.getHeight(null));
-        }
-        return new Dimension(35, 35);
+//        if (image != null) {
+//            return new Dimension(image.getWidth(null), image.getHeight(null));
+//        }
+        return new Dimension(40, 40);
     }
+
+
 
     @Override
     public void paintComponent(Graphics g) {

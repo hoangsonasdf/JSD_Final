@@ -4,6 +4,7 @@ import gamecomponent.Position;
 import lombok.Data;
 
 import javax.swing.*;
+import java.awt.*;
 
 
 @Data
@@ -15,5 +16,8 @@ public class BrickWall extends Enviroment{
         this.image = new ImageIcon("images/commonWall.gif").getImage();
     }
 
-
+    @Override
+    public Dimension getImageSize() {
+        return new Dimension(20,20);
+    }
 }

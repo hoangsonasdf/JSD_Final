@@ -29,7 +29,7 @@ public class CompositeBrickWall {
         );
     }
 
-    public void addToFrame(JFrame frame) {
+    public void addToPanel(JPanel panel) {
         BrickWall tempBrick = new BrickWall(new Position(0, 0));
         Dimension brickSize = tempBrick.getImageSize();
 
@@ -47,7 +47,7 @@ public class CompositeBrickWall {
                         brickSize.height
                 );
                 bricks.add(brick);
-                frame.add(brick);
+                panel.add(brick);
             }
         }
     }

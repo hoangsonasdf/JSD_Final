@@ -55,13 +55,14 @@ public class GameFrame extends JFrame {
         this.numberOfPlayers = numberOfPlayers;
         setLayout(null);
         setSize(800, 600);
+//        getContentPane().setBackground(Color.BLACK);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         homeBase = new HomeBase(new Position(15, 15));
         add(homeBase);
 
 
-        brickWall1 = new CompositeBrickWall(new Position(657, 143));
-        brickWall1.addToFrame(this);
+        brickWall1 = new CompositeBrickWall(new Position(0, 80));
+//        brickWall1.addToFrame(this);
 
         tree = new Tree(new Position(50, 50));
         add(tree);

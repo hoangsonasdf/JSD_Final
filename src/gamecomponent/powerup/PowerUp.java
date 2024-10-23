@@ -25,7 +25,7 @@ public abstract class PowerUp extends JPanel {
         if (image != null) {
             return new Dimension(image.getWidth(null), image.getHeight(null));
         }
-        return new Dimension(35, 35);
+        return new Dimension(40, 40);
     }
 
     @Override

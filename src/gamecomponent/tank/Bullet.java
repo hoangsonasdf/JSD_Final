@@ -106,6 +106,7 @@ public class Bullet extends JPanel {
         super.paintComponent(g);
         Image bulletImage = this.images.get(this.direction);
         if (bulletImage != null) {
+            g.setColor(Color.BLACK);
             g.drawImage(bulletImage, 0, 0, this.getWidth(), this.getHeight(), null);
         }
     }

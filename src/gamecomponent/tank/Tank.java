@@ -45,10 +45,10 @@ public abstract class Tank extends JPanel {
 
     public Dimension getImageSize() {
         Image tankImage = this.images.get(this.direction);
-        if (tankImage != null) {
-            return new Dimension(tankImage.getWidth(null), tankImage.getHeight(null));
-        }
-        return new Dimension(35, 35);
+//        if (tankImage != null) {
+//            return new Dimension(tankImage.getWidth(null), tankImage.getHeight(null));
+//        }
+        return new Dimension(40, 40);
     }
 
     protected void updatePanelPosition() {

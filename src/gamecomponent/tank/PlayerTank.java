@@ -189,6 +189,4 @@ public class PlayerTank extends Tank {
             this.tier++;
         }
     }
-
-
 }
