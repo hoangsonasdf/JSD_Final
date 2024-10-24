@@ -4,6 +4,7 @@ import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.Enviroment;
+import gamecomponent.enviroment.MetalWall;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,10 +35,10 @@ public class Bullet extends JPanel {
     }
 
     public void loadImages() {
-        this.images.put(Direction.U, new ImageIcon("images/bulletU.gif").getImage());
-        this.images.put(Direction.D, new ImageIcon("images/bulletD.gif").getImage());
-        this.images.put(Direction.L, new ImageIcon("images/bulletL.gif").getImage());
-        this.images.put(Direction.R, new ImageIcon("images/bulletR.gif").getImage());
+        this.images.put(Direction.U, new ImageIcon("images/bulletU.png").getImage());
+        this.images.put(Direction.D, new ImageIcon("images/bulletD.png").getImage());
+        this.images.put(Direction.L, new ImageIcon("images/bulletL.png").getImage());
+        this.images.put(Direction.R, new ImageIcon("images/bulletR.png").getImage());
     }
 
     public void move() {
@@ -68,6 +69,9 @@ public class Bullet extends JPanel {
             if (enviroment.isCanDestroy()) {
                 this.isActive = false;
                 enviroment.destroy();
+            }
+            if (enviroment instanceof MetalWall){
+                this.isActive = false;
             }
         }
 
@@ -131,11 +135,7 @@ public class Bullet extends JPanel {
     }
 
     public Dimension getImageSize() {
-        Image tankImage = this.images.get(this.direction);
-        if (tankImage != null) {
-            return new Dimension(tankImage.getWidth(null), tankImage.getHeight(null));
-        }
-        return new Dimension(10, 10);
+        return new Dimension(3, 13);
     }
 
     public boolean checkCollisionWith(Component other) {

@@ -161,6 +161,7 @@ public abstract class Tank extends JPanel {
 
         if (getParent() != null) {
             getParent().add(bullet);
+            getParent().setComponentZOrder(bullet, 2);
             getParent().repaint();
         }
     }
