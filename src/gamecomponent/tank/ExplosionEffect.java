@@ -11,6 +11,7 @@ public class ExplosionEffect extends JPanel {
 
     public ExplosionEffect(Position position) {
         this.position = position;
+        setOpaque(false);
         loadImage();
     }
 
@@ -21,8 +22,9 @@ public class ExplosionEffect extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
         if (explosionImage != null) {
-            g.drawImage(explosionImage, 0, 0, this.getWidth(), this.getHeight(), this);
+            g2d.drawImage(explosionImage, 0, 0, this.getWidth(), this.getHeight(), this);
         }
     }
 }

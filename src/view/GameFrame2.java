@@ -445,8 +445,8 @@ public class GameFrame2 extends JFrame {
 
         // Add Power Section
 
-         grenade = new Grenade(new Position(560, 40));
-         panel.add(grenade);
+        grenade = new Grenade(new Position(560, 40));
+        panel.add(grenade);
 
         Helmet helmet1 = new Helmet(new Position(480, 320));
         panel.add(helmet1);
@@ -655,9 +655,9 @@ public class GameFrame2 extends JFrame {
             EnemyTank enemyTank = iterator.next();
             if (enemyTank.isActive()) {
                 enemyTank.move();
-                if (random.nextInt(100) < 5) {
-                    enemyTank.attempFire();
-                }
+//                if (random.nextInt(100) < 5) {
+//                    enemyTank.attempFire();
+//                }
             } else {
                 iterator.remove();
                 if (!enemyRespawnTimer.isRunning()) {

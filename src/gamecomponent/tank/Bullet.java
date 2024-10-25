@@ -30,15 +30,16 @@ public class Bullet extends JPanel {
         this.direction = shotBy.getDirection();
         this.speed = shotBy.getBulletSpeed();
         this.isActive = true;
+        setOpaque(false);
         loadImages();
         setSize(getImageSize());
     }
 
     public void loadImages() {
-        this.images.put(Direction.U, new ImageIcon("images/bulletU.png").getImage());
-        this.images.put(Direction.D, new ImageIcon("images/bulletD.png").getImage());
-        this.images.put(Direction.L, new ImageIcon("images/bulletL.png").getImage());
-        this.images.put(Direction.R, new ImageIcon("images/bulletR.png").getImage());
+        this.images.put(Direction.U, new ImageIcon("images/bulletU.gif").getImage());
+        this.images.put(Direction.D, new ImageIcon("images/bulletD.gif").getImage());
+        this.images.put(Direction.L, new ImageIcon("images/bulletL.gif").getImage());
+        this.images.put(Direction.R, new ImageIcon("images/bulletR.gif").getImage());
     }
 
     public void move() {
@@ -68,7 +69,8 @@ public class Bullet extends JPanel {
             Enviroment enviroment = (Enviroment) collidedComponent;
             if (enviroment.isCanDestroy()) {
                 this.isActive = false;
-                enviroment.destroy();
+                getParent().remove(enviroment);
+                System.out.println(enviroment.getPosition());
             }
             if (enviroment instanceof MetalWall){
                 this.isActive = false;
@@ -108,10 +110,10 @@ public class Bullet extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
         Image bulletImage = this.images.get(this.direction);
         if (bulletImage != null) {
-            g.setColor(Color.BLACK);
-            g.drawImage(bulletImage, 0, 0, this.getWidth(), this.getHeight(), null);
+            g2d.drawImage(bulletImage, 0, 0, this.getWidth(), this.getHeight(), null);
         }
     }
 
@@ -135,7 +137,8 @@ public class Bullet extends JPanel {
     }
 
     public Dimension getImageSize() {
-        return new Dimension(3, 13);
+        Image bulletImage = this.images.get(this.direction);
+        return new Dimension(bulletImage.getWidth(null), bulletImage.getHeight(null));
     }
 
     public boolean checkCollisionWith(Component other) {

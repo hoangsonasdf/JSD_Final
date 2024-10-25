@@ -44,10 +44,6 @@ public abstract class Tank extends JPanel {
     public abstract void loadImages();
 
     public Dimension getImageSize() {
-        Image tankImage = this.images.get(this.direction);
-//        if (tankImage != null) {
-//            return new Dimension(tankImage.getWidth(null), tankImage.getHeight(null));
-//        }
         return new Dimension(40, 40);
     }
 
@@ -58,8 +54,9 @@ public abstract class Tank extends JPanel {
 
     public abstract void checkBounds();
 
-    protected boolean checkCollisionWith(Component other) {
-        if (other == this) return false;
+    protected Component[] checkCollisions() {
+        Container parent = getParent();
+        if (parent == null) return new Component[0];
 
         Rectangle tankBounds = new Rectangle(
                 position.getX(),
@@ -68,26 +65,24 @@ public abstract class Tank extends JPanel {
                 getImageSize().height
         );
 
-        Rectangle otherBounds = new Rectangle(
-                other.getX(),
-                other.getY(),
-                other.getWidth(),
-                other.getHeight()
-        );
+        java.util.List<Component> collisions = new java.util.ArrayList<>();
 
-        return tankBounds.intersects(otherBounds);
-    }
+        for (Component comp : parent.getComponents()) {
+            if (comp == this) continue;
 
-    protected Component checkCollision() {
-        Container parent = getParent();
-        if (parent != null) {
-            for (Component comp : parent.getComponents()) {
-                if (comp != this && checkCollisionWith(comp)) {
-                    return comp;
-                }
+            Rectangle compBounds = new Rectangle(
+                    comp.getX(),
+                    comp.getY(),
+                    comp.getWidth(),
+                    comp.getHeight()
+            );
+
+            if (tankBounds.intersects(compBounds)) {
+                collisions.add(comp);
             }
         }
-        return null;
+
+        return collisions.toArray(new Component[0]);
     }
 
     public void explode() {

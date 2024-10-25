@@ -66,21 +66,20 @@ public class EnemyTank extends Tank {
 
     @Override
     public void handleCollision(Position oldPosition) {
-        Component collidedComponent = checkCollision();
+        Component[] collidedComponents = checkCollisions();
         boolean shouldRevertPosition = false;
 
-        if (collidedComponent != null) {
-            if (collidedComponent instanceof Enviroment) {
-                Enviroment environment = (Enviroment) collidedComponent;
+        for (Component component : collidedComponents) {
+            if (component instanceof Enviroment) {
+                Enviroment environment = (Enviroment) component;
                 if (!environment.isCanPass()) {
                     shouldRevertPosition = true;
+                    break;
                 }
             }
-            if (collidedComponent instanceof HomeBase){
+            else if (component instanceof HomeBase || component instanceof Tank) {
                 shouldRevertPosition = true;
-            }
-            if (collidedComponent instanceof Tank) {
-                shouldRevertPosition = true;
+                break;
             }
         }
 
@@ -88,6 +87,8 @@ public class EnemyTank extends Tank {
             this.setPosition(oldPosition);
             changeDirection();
         }
+
+        updatePanelPosition();
     }
 
     private void changeDirection() {
