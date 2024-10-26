@@ -5,7 +5,7 @@ import lombok.Data;
 
 import javax.swing.*;
 
-@Data
+
 public class MetalWall extends Enviroment{
     public MetalWall(Position position) {
         super(position);

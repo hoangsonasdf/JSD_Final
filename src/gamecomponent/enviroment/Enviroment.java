@@ -48,7 +48,6 @@ public abstract class Enviroment extends JPanel {
             explosionEffect.setBounds(getX(), getY(), getWidth(), getHeight());
             parent.add(explosionEffect);
             parent.remove(this);
-            System.out.println(this.position);
             SoundPlayer.playSound("sounds/explosion.wav");
             Timer timer = new Timer(1000, e -> {
                 parent.remove(explosionEffect);

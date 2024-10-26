@@ -69,8 +69,7 @@ public class Bullet extends JPanel {
             Enviroment enviroment = (Enviroment) collidedComponent;
             if (enviroment.isCanDestroy()) {
                 this.isActive = false;
-                getParent().remove(enviroment);
-                System.out.println(enviroment.getPosition());
+                enviroment.destroy();
             }
             if (enviroment instanceof MetalWall){
                 this.isActive = false;

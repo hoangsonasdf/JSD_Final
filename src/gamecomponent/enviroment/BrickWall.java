@@ -1,13 +1,11 @@
 package gamecomponent.enviroment;
 
 import gamecomponent.Position;
-import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
 
 
-@Data
 public class BrickWall extends Enviroment{
     public BrickWall(Position position) {
         super(position);

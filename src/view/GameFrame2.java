@@ -491,12 +491,11 @@ public class GameFrame2 extends JFrame {
         availableTanks.add(new ArmorTank(new Position(560, 600)));
         availableTanks.add(new FastTank(new Position(0, 40)));
         availableTanks.add(new PowerTank(new Position(280, 600)));
-//        panel.add(availableTanks);
 
         spawnRandomEnemyTank();
         spawnRandomEnemyTank();
 
-        inputTimer = new Timer(16, e -> handleInput()); // 60 FPS
+        inputTimer = new Timer(1000 / 60, e -> handleInput());
         inputTimer.start();
 
         respawnTimer = new Timer(3000, e -> {
@@ -655,9 +654,9 @@ public class GameFrame2 extends JFrame {
             EnemyTank enemyTank = iterator.next();
             if (enemyTank.isActive()) {
                 enemyTank.move();
-//                if (random.nextInt(100) < 5) {
-//                    enemyTank.attempFire();
-//                }
+                if (random.nextInt(100) < 5) {
+                    enemyTank.attempFire();
+                }
             } else {
                 iterator.remove();
                 if (!enemyRespawnTimer.isRunning()) {
