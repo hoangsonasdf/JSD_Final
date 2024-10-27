@@ -39,7 +39,27 @@ public abstract class Tank extends JPanel {
         setBounds(this.position.getX(), this.position.getY(), this.getImageSize().width, this.getImageSize().height);
     }
 
-    public abstract void move();
+    public void move(){
+        Position oldPosition = new Position(position.getX(), position.getY());
+        switch (direction) {
+            case U:
+                position.setY(position.getY() - movementSpeed);
+                break;
+            case D:
+                position.setY(position.getY() + movementSpeed);
+                break;
+            case L:
+                position.setX(position.getX() - movementSpeed);
+                break;
+            case R:
+                position.setX(position.getX() + movementSpeed);
+                break;
+        }
+
+        handleCollision(oldPosition);
+        checkBounds();
+        updatePanelPosition();
+    }
 
     public abstract void loadImages();
 

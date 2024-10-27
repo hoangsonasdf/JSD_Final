@@ -20,27 +20,6 @@ public class EnemyTank extends Tank {
     private Random random = new Random();
 
     @Override
-    public void move() {
-        Position oldPosition = new Position(position.getX(), position.getY());
-        switch (direction) {
-            case U:
-                position.setY(position.getY() - movementSpeed);
-                break;
-            case D:
-                position.setY(position.getY() + movementSpeed);
-                break;
-            case L:
-                position.setX(position.getX() - movementSpeed);
-                 break;
-            case R:
-                position.setX(position.getX() + movementSpeed);
-                break;
-        }
-        handleCollision(oldPosition);
-        checkBounds();
-        updatePanelPosition();
-    }
-    @Override
     public void checkBounds() {
         int frameWidth = getParent().getWidth();
         int frameHeight = getParent().getHeight();

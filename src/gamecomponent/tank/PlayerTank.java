@@ -40,28 +40,6 @@ public class PlayerTank extends Tank {
     }
 
 
-    @Override
-    public void move() {
-        Position oldPosition = new Position(position.getX(), position.getY());
-        switch (direction) {
-            case U:
-                position.setY(position.getY() - movementSpeed);
-                break;
-            case D:
-                position.setY(position.getY() + movementSpeed);
-                break;
-            case L:
-                position.setX(position.getX() - movementSpeed);
-                break;
-            case R:
-                position.setX(position.getX() + movementSpeed);
-                break;
-        }
-
-        handleCollision(oldPosition);
-        checkBounds();
-        updatePanelPosition();
-    }
 
     @Override
     public void loadImages() {
