@@ -9,6 +9,7 @@ public class River extends Enviroment{
         super(position);
         this.canPass = false;
         this.canDestroy = false;
+        this.canBulletPass = true;
         this.image = new ImageIcon("images/river.jpg").getImage();
     }
 }

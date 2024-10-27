@@ -11,6 +11,7 @@ public class MetalWall extends Enviroment{
         super(position);
         this.canPass = false;
         this.canDestroy = false;
+        this.canBulletPass = false;
         this.image = new ImageIcon("images/metalWall.gif").getImage();
     }
 

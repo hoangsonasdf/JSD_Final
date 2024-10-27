@@ -11,6 +11,7 @@ import java.awt.*;
 @Data
 public abstract class Enviroment extends JPanel {
     protected Position position;
+    protected boolean canBulletPass;
     protected boolean canPass;
     protected boolean canDestroy;
     protected Image image;
@@ -25,9 +26,6 @@ public abstract class Enviroment extends JPanel {
 
     }
     public Dimension getImageSize() {
-//        if (image != null) {
-//            return new Dimension(image.getWidth(null), image.getHeight(null));
-//        }
         return new Dimension(40, 40);
     }
 

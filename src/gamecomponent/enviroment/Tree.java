@@ -9,6 +9,7 @@ public class Tree extends Enviroment{
         super(position);
         this.canPass = true;
         this.canDestroy = false;
+        this.canBulletPass = true;
         this.image = new ImageIcon("images/tree.gif").getImage();
     }
 }

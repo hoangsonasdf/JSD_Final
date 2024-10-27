@@ -128,23 +128,44 @@ public abstract class Tank extends JPanel {
 
         Position bulletPosition = new Position(position.getX(), position.getY());
 
-        switch (direction) {
-            case U:
-                bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
-                bulletPosition.setY(position.getY() - bullet.getImageSize().height);
-                break;
-            case D:
-                bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
-                bulletPosition.setY(position.getY() + getHeight());
-                break;
-            case L:
-                bulletPosition.setX(position.getX() - bullet.getImageSize().width);
-                bulletPosition.setY(tankCenterY + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
-                break;
-            case R:
-                bulletPosition.setX(position.getX() + getWidth());
-                bulletPosition.setY(tankCenterY + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
-                break;
+        if (numberOfBulletPerShoot == 1) {
+            switch (direction) {
+                case U:
+                    bulletPosition.setX(tankCenterX - bullet.getImageSize().width / 2);
+                    bulletPosition.setY(position.getY() - bullet.getImageSize().height);
+                    break;
+                case D:
+                    bulletPosition.setX(tankCenterX - bullet.getImageSize().width / 2);
+                    bulletPosition.setY(position.getY() + getHeight());
+                    break;
+                case L:
+                    bulletPosition.setX(position.getX() - bullet.getImageSize().width);
+                    bulletPosition.setY(tankCenterY - bullet.getImageSize().height / 2);
+                    break;
+                case R:
+                    bulletPosition.setX(position.getX() + getWidth());
+                    bulletPosition.setY(tankCenterY - bullet.getImageSize().height / 2);
+                    break;
+            }
+        } else {
+            switch (direction) {
+                case U:
+                    bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                    bulletPosition.setY(position.getY() - bullet.getImageSize().height);
+                    break;
+                case D:
+                    bulletPosition.setX(tankCenterX + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                    bulletPosition.setY(position.getY() + getHeight());
+                    break;
+                case L:
+                    bulletPosition.setX(position.getX() - bullet.getImageSize().width);
+                    bulletPosition.setY(tankCenterY + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                    break;
+                case R:
+                    bulletPosition.setX(position.getX() + getWidth());
+                    bulletPosition.setY(tankCenterY + (bulletIndex - numberOfBulletPerShoot / 2) * bulletOffset);
+                    break;
+            }
         }
 
         bullet.setPosition(bulletPosition);
@@ -160,6 +181,7 @@ public abstract class Tank extends JPanel {
             getParent().repaint();
         }
     }
+
 
 
 }

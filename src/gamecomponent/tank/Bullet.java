@@ -62,45 +62,45 @@ public class Bullet extends JPanel {
     }
 
     private void handleCollision() {
-        Component collidedComponent = checkCollision();
+        Component[] collidedComponents = checkCollisions();
 
+        for (Component component : collidedComponents) {
+            if (component instanceof Enviroment) {
+                Enviroment enviroment = (Enviroment) component;
+                if (!enviroment.isCanBulletPass()){
+                    this.isActive = false;
+                }
+                if (enviroment.isCanDestroy()) {
+                    enviroment.destroy();
+                }
+            }
 
-        if (collidedComponent instanceof Enviroment) {
-            Enviroment enviroment = (Enviroment) collidedComponent;
-            if (enviroment.isCanDestroy()) {
+            if (this.shotBy instanceof EnemyTank && component instanceof HomeBase) {
                 this.isActive = false;
-                enviroment.destroy();
+                HomeBase homeBase = (HomeBase) component;
+                homeBase.setHealth(homeBase.getHealth() - 1);
             }
-            if (enviroment instanceof MetalWall){
+
+            if (this.shotBy instanceof PlayerTank && component instanceof EnemyTank) {
                 this.isActive = false;
+                EnemyTank enemyTank = (EnemyTank) component;
+                enemyTank.setHealth(enemyTank.getHealth() - 1);
+                if (enemyTank.getHealth() == 0) {
+                    enemyTank.explode();
+                }
             }
-        }
 
-        if (this.shotBy instanceof EnemyTank && collidedComponent instanceof HomeBase) {
-            this.isActive = false;
-            HomeBase homeBase = (HomeBase) collidedComponent;
-            homeBase.setHealth(homeBase.getHealth() - 1);
-        }
-
-        if (this.shotBy instanceof PlayerTank && collidedComponent instanceof EnemyTank) {
-            this.isActive = false;
-            EnemyTank enemyTank = (EnemyTank) collidedComponent;
-            enemyTank.setHealth(enemyTank.getHealth() - 1);
-            if (enemyTank.getHealth() == 0) {
-                enemyTank.explode();
-            }
-        }
-
-        if (this.shotBy instanceof EnemyTank && collidedComponent instanceof PlayerTank) {
-            this.isActive = false;
-            PlayerTank playerTank = (PlayerTank) collidedComponent;
-            if (playerTank.isShield()) {
-                playerTank.setShield(false);
-            } else {
-                playerTank.setHealth(playerTank.getHealth() - 1);
-                if (playerTank.getHealth() == 0) {
-                    playerTank.setLife(playerTank.getLife() - 1);
-                    playerTank.explode();
+            if (this.shotBy instanceof EnemyTank && component instanceof PlayerTank) {
+                this.isActive = false;
+                PlayerTank playerTank = (PlayerTank) component;
+                if (playerTank.isShield()) {
+                    playerTank.setShield(false);
+                } else {
+                    playerTank.setHealth(playerTank.getHealth() - 1);
+                    if (playerTank.getHealth() == 0) {
+                        playerTank.setLife(playerTank.getLife() - 1);
+                        playerTank.explode();
+                    }
                 }
             }
         }
@@ -140,33 +140,34 @@ public class Bullet extends JPanel {
         return new Dimension(bulletImage.getWidth(null), bulletImage.getHeight(null));
     }
 
-    public boolean checkCollisionWith(Component other) {
-        if (other == this) return false;
+    protected Component[] checkCollisions() {
+        Container parent = getParent();
+        if (parent == null) return new Component[0];
+
         Rectangle tankBounds = new Rectangle(
                 position.getX(),
                 position.getY(),
                 getImageSize().width,
                 getImageSize().height
         );
-        Rectangle otherBounds = new Rectangle(
-                other.getX(),
-                other.getY(),
-                other.getWidth(),
-                other.getHeight()
-        );
 
-        return tankBounds.intersects(otherBounds);
-    }
+        java.util.List<Component> collisions = new java.util.ArrayList<>();
 
-    public Component checkCollision() {
-        Container parent = getParent();
-        if (parent != null) {
-            for (Component comp : parent.getComponents()) {
-                if (comp != this && checkCollisionWith(comp)) {
-                    return comp;
-                }
+        for (Component comp : parent.getComponents()) {
+            if (comp == this) continue;
+
+            Rectangle compBounds = new Rectangle(
+                    comp.getX(),
+                    comp.getY(),
+                    comp.getWidth(),
+                    comp.getHeight()
+            );
+
+            if (tankBounds.intersects(compBounds)) {
+                collisions.add(comp);
             }
         }
-        return null;
+
+        return collisions.toArray(new Component[0]);
     }
 }

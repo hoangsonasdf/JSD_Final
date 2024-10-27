@@ -11,6 +11,7 @@ public class BrickWall extends Enviroment{
         super(position);
         this.canPass = false;
         this.canDestroy = true;
+        this.canBulletPass = false;
         this.image = new ImageIcon("images/commonWall.gif").getImage();
     }
 
