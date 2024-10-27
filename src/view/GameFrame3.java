@@ -29,7 +29,6 @@ public class GameFrame3 extends JFrame {
     private PlayerTank playerOne;
     private PlayerTank playerTwo;
     private KeyStateHandler keyStateHandler;
-    private Timer inputTimer;
     private Position playerOneSpawnPosition = new Position(280, 560);
     private Position playerTwoSpawnPosition = new Position(320, 560);
     private List<EnemyTank> enemyTanks = new ArrayList<>();
@@ -457,9 +456,7 @@ public class GameFrame3 extends JFrame {
         spawnRandomEnemyTank();
         spawnRandomEnemyTank();
         spawnRandomEnemyTank();
-
-        inputTimer = new Timer(16, e -> handleInput()); // 60 FPS
-        inputTimer.start();
+        
 
         respawnTimer = new Timer(3000, e -> {
             respawnPlayer();
@@ -600,6 +597,7 @@ public class GameFrame3 extends JFrame {
     }
 
     private void updateGame() {
+        handleInput();
         BulletManager.getInstance().updateBullets(panel);
         if (isGameOver) {
             return;
@@ -635,9 +633,6 @@ public class GameFrame3 extends JFrame {
     @Override
     public void dispose() {
         super.dispose();
-        if (inputTimer != null) {
-            inputTimer.stop();
-        }
         if (gameTimer != null) {
             gameTimer.stop();
         }

@@ -63,18 +63,18 @@ public class Bullet extends JPanel {
 
     private void handleCollision() {
         Component[] collidedComponents = checkCollisions();
-
-        for (Component component : collidedComponents) {
-            if (component instanceof Enviroment) {
-                Enviroment enviroment = (Enviroment) component;
-                if (!enviroment.isCanBulletPass()){
+        if (collidedComponents.length > 0) {
+            if (collidedComponents[0] instanceof Enviroment) {
+                Enviroment enviroment = (Enviroment) collidedComponents[0];
+                if (!enviroment.isCanBulletPass()) {
                     this.isActive = false;
                 }
                 if (enviroment.isCanDestroy()) {
                     enviroment.destroy();
                 }
             }
-
+        }
+        for (Component component : collidedComponents) {
             if (this.shotBy instanceof EnemyTank && component instanceof HomeBase) {
                 this.isActive = false;
                 HomeBase homeBase = (HomeBase) component;

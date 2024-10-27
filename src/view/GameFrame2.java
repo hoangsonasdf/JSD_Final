@@ -29,7 +29,7 @@ public class GameFrame2 extends JFrame {
     private PlayerTank playerOne;
     private PlayerTank playerTwo;
     private KeyStateHandler keyStateHandler;
-    private Timer inputTimer;
+
     private Position playerOneSpawnPosition = new Position(40, 480);
     private Position playerTwoSpawnPosition = new Position(120, 560);
     private List<EnemyTank> enemyTanks = new ArrayList<>();
@@ -167,8 +167,6 @@ public class GameFrame2 extends JFrame {
         CompositeBrickWall brickWall32 = new CompositeBrickWall(new Position(0,440));
         brickWall32.addToPanel(panel);
 
-//        BrickWall brickWalls1 = new BrickWall(new Position(0,440));
-//        panel.add(brickWalls1);
 
         CompositeBrickWall brickWall33 = new CompositeBrickWall(new Position(280,480));
         brickWall33.addToPanel(panel);
@@ -495,8 +493,6 @@ public class GameFrame2 extends JFrame {
         spawnRandomEnemyTank();
         spawnRandomEnemyTank();
 
-        inputTimer = new Timer(1000 / 60, e -> handleInput());
-        inputTimer.start();
 
         respawnTimer = new Timer(3000, e -> {
             respawnPlayer();
@@ -636,6 +632,7 @@ public class GameFrame2 extends JFrame {
     }
 
     private void updateGame() {
+        handleInput();
         BulletManager.getInstance().updateBullets(panel);
         if (isGameOver) {
             return;
@@ -671,9 +668,6 @@ public class GameFrame2 extends JFrame {
     @Override
     public void dispose() {
         super.dispose();
-        if (inputTimer != null) {
-            inputTimer.stop();
-        }
         if (gameTimer != null) {
             gameTimer.stop();
         }
