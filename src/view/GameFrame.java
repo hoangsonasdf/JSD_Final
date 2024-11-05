@@ -47,6 +47,7 @@ public class GameFrame extends JFrame {
     private int maxActiveTanks = 2;
     private Timer respawnTimer;
     private Timer gameTimer;
+    private JLabel scoreLabel;
 
 
     public void numPlayersException (int numberOfPlayers){
@@ -57,7 +58,6 @@ public class GameFrame extends JFrame {
 
     public Component modifyPanel(JPanel panel){
         this.panel = panel;
-
 
         panel.setLayout(null);
         panel.setBackground(Color.black);
@@ -509,10 +509,10 @@ public class GameFrame extends JFrame {
 
 
         this.panel = new JPanel();
-
         modifyPanel(panel);
         add(panel);
 
+        displayPoint();
         spawnRandomEnemyTank();
         spawnRandomEnemyTank();
 
@@ -524,6 +524,17 @@ public class GameFrame extends JFrame {
 //        setVisible(true);
 //        setResizable(false);
         startGame();
+    }
+
+    public void displayPoint(){
+        JLabel gameOverLabel = new JLabel("Score: " + playerOne.getPoint());
+        gameOverLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        gameOverLabel.setForeground(Color.white);
+        gameOverLabel.setBounds(getWidth() - 100, getHeight() - 450, 300, 100);
+        add(gameOverLabel);
+
+        setComponentZOrder(gameOverLabel,0);
+        repaint();
     }
 
     public void setRespawnTimer(){
@@ -661,6 +672,9 @@ public class GameFrame extends JFrame {
 
     public void updateGame() {
         handleInput();
+
+
+
         BulletManager.getInstance().updateBullets(panel);
         if (isGameOver) {
             return;
