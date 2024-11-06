@@ -1,7 +1,6 @@
 package manager;
 
 import gamecomponent.tank.Bullet;
-import gamecomponent.tank.Tank;
 
 import java.awt.*;
 import java.util.ArrayList;

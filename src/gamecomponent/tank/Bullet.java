@@ -86,6 +86,7 @@ public class Bullet extends JPanel {
                 EnemyTank enemyTank = (EnemyTank) component;
                 enemyTank.setHealth(enemyTank.getHealth() - 1);
                 if (enemyTank.getHealth() == 0) {
+                    this.shotBy.setPoint(this.shotBy.getPoint() + enemyTank.getPoint());
                     enemyTank.explode();
                 }
             }

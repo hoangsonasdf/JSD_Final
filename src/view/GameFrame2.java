@@ -22,6 +22,7 @@ import java.util.Random;
 
 
 public class GameFrame2 extends JFrame {
+    private HomeBase homeBase;
     private JPanel panel;
     private final int numberOfPlayers;
     private Random random = new Random();
@@ -34,19 +35,16 @@ public class GameFrame2 extends JFrame {
     private Position playerTwoSpawnPosition = new Position(120, 560);
     private List<EnemyTank> enemyTanks = new ArrayList<>();
     private List<EnemyTank> availableTanks = new ArrayList<>();
-    private Grenade grenade;
-    private Tree tree;
-    private Helmet helmet;
-    private CompositeBrickWall brickWall1;
-    private Star star;
-    private Star star1;
-    private Star star2;
-    private HomeBase homeBase;
     private boolean isGameOver = false;
     private Timer enemyRespawnTimer;
     private int maxActiveTanks = 2;
     private Timer respawnTimer;
     private Timer gameTimer;
+    private JLabel player1ScoreLabel;
+    private JLabel player1LivesLabel;
+    private JLabel player2ScoreLabel;
+    private JLabel player2LivesLabel;
+
 
     public GameFrame2(int numberOfPlayers) {
         if (numberOfPlayers < 1 || numberOfPlayers > 2) {
@@ -66,6 +64,14 @@ public class GameFrame2 extends JFrame {
         panel.setSize(640,640);
         panel.setLocation(80,20);
         add(panel);
+
+
+        JPanel statsPanel = new JPanel();
+        statsPanel.setLayout(new GridLayout(numberOfPlayers == 2 ? 4 : 2, 1));
+        statsPanel.setBounds(740, 20, 80, numberOfPlayers == 2 ? 160 : 80);
+        statsPanel.setBackground(Color.BLACK);
+
+
 
         homeBase = new HomeBase(new Position(0, 600));
         panel.add(homeBase);
@@ -189,10 +195,6 @@ public class GameFrame2 extends JFrame {
         CompositeBrickWall brickWall39 = new CompositeBrickWall(new Position(480,600));
         brickWall39.addToPanel(panel);
 
-//        brickWall1 = new CompositeBrickWall(new Position(0, 80));
-//        brickWall1.addToPanel(panel);
-
-        // Add Metal Section
         MetalWall mw1 = new MetalWall(new Position(160,40));
         panel.add(mw1);
 
@@ -443,7 +445,7 @@ public class GameFrame2 extends JFrame {
 
         // Add Power Section
 
-        grenade = new Grenade(new Position(560, 40));
+        Grenade grenade = new Grenade(new Position(560, 40));
         panel.add(grenade);
 
         Helmet helmet1 = new Helmet(new Position(480, 320));
@@ -455,13 +457,13 @@ public class GameFrame2 extends JFrame {
         Helmet helmet3 = new Helmet(new Position(440, 600));
         panel.add(helmet3);
 
-        star = new Star(new Position(0, 160));
+        Star star = new Star(new Position(0, 160));
         panel.add(star);
 
-        star1 = new Star(new Position(280, 120));
+        Star star1 = new Star(new Position(280, 120));
         panel.add(star1);
 
-        star2 = new Star(new Position(320, 480));
+        Star star2 = new Star(new Position(320, 480));
         panel.add(star2);
 
         TankUp tankUp = new TankUp(new Position(160,120));
@@ -493,6 +495,25 @@ public class GameFrame2 extends JFrame {
         spawnRandomEnemyTank();
         spawnRandomEnemyTank();
 
+        player1ScoreLabel = new JLabel("P1: " + playerOne.getPoint());
+        player1ScoreLabel.setForeground(Color.WHITE);
+        player1LivesLabel = new JLabel("♥: " + playerOne.getLife());
+        player1LivesLabel.setForeground(Color.RED);
+        statsPanel.add(player1ScoreLabel);
+        statsPanel.add(player1LivesLabel);
+
+        if (numberOfPlayers == 2) {
+            player2ScoreLabel = new JLabel("P2: " + playerTwo.getPoint());
+            player2ScoreLabel.setForeground(Color.WHITE);
+            player2LivesLabel = new JLabel("♥: " + playerTwo.getLife());
+            player2LivesLabel.setForeground(Color.RED);
+
+            statsPanel.add(player2ScoreLabel);
+            statsPanel.add(player2LivesLabel);
+        }
+
+        add(statsPanel);
+
 
         respawnTimer = new Timer(3000, e -> {
             respawnPlayer();
@@ -512,6 +533,18 @@ public class GameFrame2 extends JFrame {
         setVisible(true);
         setResizable(false);
         startGame();
+    }
+
+    private void updateDisplays() {
+        if (playerOne != null) {
+            player1ScoreLabel.setText("P1: " + playerOne.getPoint());
+            player1LivesLabel.setText("♥: " + playerOne.getLife());
+        }
+
+        if (numberOfPlayers == 2 && playerTwo != null) {
+            player2ScoreLabel.setText("P2: " + playerTwo.getPoint());
+            player2LivesLabel.setText("♥: " + playerTwo.getLife());
+        }
     }
 
     private void handleInput() {
@@ -634,12 +667,10 @@ public class GameFrame2 extends JFrame {
     private void updateGame() {
         handleInput();
         BulletManager.getInstance().updateBullets(panel);
-        if (isGameOver) {
-            return;
-        }
-        if (homeBase.getHealth() <= 0){
-            gameOver();
-        }
+        updateDisplays();
+        checkLevelComplete();
+        checkGameOver();
+
 
         if ((!playerOne.isActive() || (numberOfPlayers == 2 && !playerTwo.isActive())) &&
                 !respawnTimer.isRunning()) {
@@ -663,6 +694,44 @@ public class GameFrame2 extends JFrame {
         }
 
         repaint();
+    }
+
+    private void checkGameOver() {
+        if (isGameOver) {
+            return;
+        }
+        if (numberOfPlayers == 1) {
+            if (playerOne.getLife() <= 0) {
+                gameOver();
+            }
+        } else {
+            if (playerOne.getLife() <= 0 && playerTwo.getLife() <= 0) {
+                gameOver();
+            }
+        }
+        if (homeBase.getHealth() <= 0){
+            gameOver();
+        }
+    }
+
+    private void checkLevelComplete() {
+        if (enemyTanks.isEmpty() && availableTanks.isEmpty()) {
+            gameTimer.stop();
+            if (respawnTimer != null) respawnTimer.stop();
+            if (enemyRespawnTimer != null) enemyRespawnTimer.stop();
+
+            SwingUtilities.invokeLater(() -> {
+                GameFrame3 nextLevel = new GameFrame3(numberOfPlayers);
+                if (playerOne != null) {
+                    nextLevel.setPlayer1State(playerOne.getPoint(), playerOne.getLife(), playerOne.getTier());
+                }
+                if (playerTwo != null) {
+                    nextLevel.setPlayer2State(playerTwo.getPoint(), playerTwo.getLife(), playerTwo.getTier());
+                }
+                nextLevel.setVisible(true);
+                this.dispose();
+            });
+        }
     }
 
     @Override
