@@ -5,8 +5,8 @@ import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.*;
-import gamecomponent.inputhandler.KeyStateHandler;
-import gamecomponent.powerup.Grenade;
+import gamecomponent.powerup.PowerUp;
+import manager.KeyStateHandler;
 import gamecomponent.powerup.Helmet;
 import gamecomponent.powerup.Star;
 import gamecomponent.powerup.TankUp;
@@ -33,12 +33,15 @@ public class GameFrame3 extends JFrame {
     private Position playerTwoSpawnPosition = new Position(320, 560);
     private List<EnemyTank> enemyTanks = new ArrayList<>();
     private List<EnemyTank> availableTanks = new ArrayList<>();
+    private List<PowerUp> powerUpList = new ArrayList<>();
     private HomeBase homeBase;
     private boolean isGameOver = false;
     private Timer enemyRespawnTimer;
     private int maxActiveTanks = 2;
     private Timer respawnTimer;
     private Timer gameTimer;
+    private Timer powerUpSpawnTimer;
+    private int powerUpSpawnInterval = 10000;
     private JLabel player1ScoreLabel;
     private JLabel player1LivesLabel;
     private JLabel player2ScoreLabel;
@@ -77,22 +80,22 @@ public class GameFrame3 extends JFrame {
 
         // add power-up
         Helmet helmet1 = new Helmet(new Position(240, 320));
-        panel.add(helmet1);
+        powerUpList.add(helmet1);
 
         Helmet helmet2 = new Helmet(new Position(560, 560));
-        panel.add(helmet2);
+        powerUpList.add(helmet2);
 
         Star star = new Star(new Position(360, 320));
-        panel.add(star);
+        powerUpList.add(star);
 
         Star star1 = new Star(new Position(40, 560));
-        panel.add(star1);
+        powerUpList.add(star1);
 
         TankUp tankUp = new TankUp(new Position(560,40));
-        panel.add(tankUp);
+        powerUpList.add(tankUp);
 
         TankUp tankUp1 = new TankUp(new Position(280,280));
-        panel.add(tankUp1);
+        powerUpList.add(tankUp1);
 
         // add tanks
         availableTanks.add(new BasicTank(new Position(240, 40)));
@@ -496,11 +499,22 @@ public class GameFrame3 extends JFrame {
         });
         enemyRespawnTimer.setRepeats(false);
 
+        powerUpSpawnTimer = new Timer(powerUpSpawnInterval, e -> {
+            spawnPowerUp();
+        });
+        powerUpSpawnTimer.start();
+
         setFocusable(true);
         requestFocus();
         setVisible(true);
         setResizable(false);
         startGame();
+    }
+
+    private void spawnPowerUp() {
+        int randomIndex = random.nextInt(powerUpList.size());
+        panel.add(powerUpList.get(randomIndex));
+        powerUpList.remove(powerUpList.get(randomIndex));
     }
 
     private void updateDisplays() {

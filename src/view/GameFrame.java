@@ -5,7 +5,7 @@ import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.CompositeBrickWall;
 import gamecomponent.enviroment.Tree;
-import gamecomponent.inputhandler.KeyStateHandler;
+import manager.KeyStateHandler;
 import gamecomponent.powerup.Grenade;
 import gamecomponent.powerup.Helmet;
 import gamecomponent.powerup.Star;

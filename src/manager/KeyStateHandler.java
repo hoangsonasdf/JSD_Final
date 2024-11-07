@@ -1,4 +1,4 @@
-package gamecomponent.inputhandler;
+package manager;
 
 import java.util.HashSet;
 import java.util.Set;

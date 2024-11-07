@@ -4,11 +4,8 @@ import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.*;
-import gamecomponent.inputhandler.KeyStateHandler;
-import gamecomponent.powerup.Grenade;
-import gamecomponent.powerup.Helmet;
-import gamecomponent.powerup.Star;
-import gamecomponent.powerup.TankUp;
+import gamecomponent.powerup.*;
+import manager.KeyStateHandler;
 import gamecomponent.tank.*;
 import manager.BulletManager;
 
@@ -26,7 +23,6 @@ public class GameFrame2 extends JFrame {
     private JPanel panel;
     private final int numberOfPlayers;
     private Random random = new Random();
-    private Position spawnPosition = new Position(100, 100);
     private PlayerTank playerOne;
     private PlayerTank playerTwo;
     private KeyStateHandler keyStateHandler;
@@ -35,11 +31,14 @@ public class GameFrame2 extends JFrame {
     private Position playerTwoSpawnPosition = new Position(120, 560);
     private List<EnemyTank> enemyTanks = new ArrayList<>();
     private List<EnemyTank> availableTanks = new ArrayList<>();
+    private List<PowerUp> powerUpList = new ArrayList<>();
     private boolean isGameOver = false;
     private Timer enemyRespawnTimer;
     private int maxActiveTanks = 2;
     private Timer respawnTimer;
     private Timer gameTimer;
+    private Timer powerUpSpawnTimer;
+    private int powerUpSpawnInterval = 10000;
     private JLabel player1ScoreLabel;
     private JLabel player1LivesLabel;
     private JLabel player2ScoreLabel;
@@ -446,34 +445,34 @@ public class GameFrame2 extends JFrame {
         // Add Power Section
 
         Grenade grenade = new Grenade(new Position(560, 40));
-        panel.add(grenade);
+        powerUpList.add(grenade);
 
         Helmet helmet1 = new Helmet(new Position(480, 320));
-        panel.add(helmet1);
+        powerUpList.add(helmet1);
 
         Helmet helmet2 = new Helmet(new Position(120, 280));
-        panel.add(helmet2);
+        powerUpList.add(helmet2);
 
         Helmet helmet3 = new Helmet(new Position(440, 600));
-        panel.add(helmet3);
+        powerUpList.add(helmet3);
 
         Star star = new Star(new Position(0, 160));
-        panel.add(star);
+        powerUpList.add(star);
 
         Star star1 = new Star(new Position(280, 120));
-        panel.add(star1);
+        powerUpList.add(star1);
 
         Star star2 = new Star(new Position(320, 480));
-        panel.add(star2);
+        powerUpList.add(star2);
 
         TankUp tankUp = new TankUp(new Position(160,120));
-        panel.add(tankUp);
+        powerUpList.add(tankUp);
 
         TankUp tankUp2 = new TankUp(new Position(240,360));
-        panel.add(tankUp2);
+        powerUpList.add(tankUp2);
 
         TankUp tankUp3 = new TankUp(new Position(440,480));
-        panel.add(tankUp3);
+        powerUpList.add(tankUp3);
 
 
         keyStateHandler = new KeyStateHandler();
@@ -528,11 +527,22 @@ public class GameFrame2 extends JFrame {
         });
         enemyRespawnTimer.setRepeats(false);
 
+        powerUpSpawnTimer = new Timer(powerUpSpawnInterval, e -> {
+            spawnPowerUp();
+        });
+        powerUpSpawnTimer.start();
+
         setFocusable(true);
         requestFocus();
         setVisible(true);
         setResizable(false);
         startGame();
+    }
+
+    private void spawnPowerUp() {
+        int randomIndex = random.nextInt(powerUpList.size());
+        panel.add(powerUpList.get(randomIndex));
+        powerUpList.remove(powerUpList.get(randomIndex));
     }
 
     private void updateDisplays() {
