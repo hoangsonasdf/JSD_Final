@@ -6,6 +6,7 @@ import gamecomponent.Position;
 import gamecomponent.enviroment.CompositeBrickWall;
 import gamecomponent.enviroment.MetalWall;
 import gamecomponent.enviroment.Tree;
+import gamecomponent.powerup.PowerUp;
 import manager.KeyStateHandler;
 import gamecomponent.powerup.Helmet;
 import gamecomponent.powerup.Star;
@@ -21,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class GameFrame4 extends JFrame {
+public class GameFrameLevel3 extends JFrame {
     private JPanel panel;
     private final int numberOfPlayers;
     private Random random = new Random();
@@ -33,16 +34,24 @@ public class GameFrame4 extends JFrame {
     private Position playerTwoSpawnPosition = new Position(320, 560);
     private List<EnemyTank> enemyTanks = new ArrayList<>();
     private List<EnemyTank> availableTanks = new ArrayList<>();
+    private List<PowerUp> powerUpList = new ArrayList<>();
     private Star star1;
     private Star star2;
     private HomeBase homeBase;
     private boolean isGameOver = false;
     private Timer enemyRespawnTimer;
-    private int maxActiveTanks = 2;
+    private int maxActiveTanks = 4;
     private Timer respawnTimer;
     private Timer gameTimer;
+    private Timer powerUpSpawnTimer;
+    private int powerUpSpawnInterval = 10000;
 
-    public GameFrame4(int numberOfPlayers) {
+    private JLabel player1ScoreLabel;
+    private JLabel player1LivesLabel;
+    private JLabel player2ScoreLabel;
+    private JLabel player2LivesLabel;
+
+    public GameFrameLevel3(int numberOfPlayers) {
         if (numberOfPlayers < 1 || numberOfPlayers > 2) {
             throw new IllegalArgumentException("Number of players must be 1 or 2");
         }
@@ -61,28 +70,33 @@ public class GameFrame4 extends JFrame {
         panel.setLocation(80,20);
         add(panel);
 
+        JPanel statsPanel = new JPanel();
+        statsPanel.setLayout(new GridLayout(numberOfPlayers == 2 ? 4 : 2, 1));
+        statsPanel.setBounds(740, 20, 80, numberOfPlayers == 2 ? 160 : 80);
+        statsPanel.setBackground(Color.BLACK);
+
         // Add home base
         homeBase = new HomeBase(new Position(280, 280));
         panel.add(homeBase);
 
         // Add Power-ups
         Helmet helmet1 = new Helmet(new Position(520, 80));
-        panel.add(helmet1);
+        powerUpList.add(helmet1);
 
         Helmet helmet2 = new Helmet(new Position(80, 520));
-        panel.add(helmet2);
+        powerUpList.add(helmet2);
 
         star1 = new Star(new Position(80, 80));
-        panel.add(star1);
+        powerUpList.add(star1);
 
         star2 = new Star(new Position(520, 520));
-        panel.add(star2);
+        powerUpList.add(star2);
 
         TankUp tankUp1 = new TankUp(new Position(320,280));
-        panel.add(tankUp1);
+        powerUpList.add(tankUp1);
 
         TankUp tankUp2 = new TankUp(new Position(280,320));
-        panel.add(tankUp2);
+        powerUpList.add(tankUp2);
 
         // Add Tanks
         availableTanks.add(new BasicTank(new Position(40, 40)));
@@ -345,8 +359,28 @@ public class GameFrame4 extends JFrame {
             panel.add(playerTwo);
         }
 
-        spawnRandomEnemyTank();
-        spawnRandomEnemyTank();
+        for (int i = 0; i < maxActiveTanks; i++) {
+            spawnRandomEnemyTank();
+        }
+
+        player1ScoreLabel = new JLabel("P1: " + playerOne.getPoint());
+        player1ScoreLabel.setForeground(Color.WHITE);
+        player1LivesLabel = new JLabel("♥: " + playerOne.getLife());
+        player1LivesLabel.setForeground(Color.RED);
+        statsPanel.add(player1ScoreLabel);
+        statsPanel.add(player1LivesLabel);
+
+        if (numberOfPlayers == 2) {
+            player2ScoreLabel = new JLabel("P2: " + playerTwo.getPoint());
+            player2ScoreLabel.setForeground(Color.WHITE);
+            player2LivesLabel = new JLabel("♥: " + playerTwo.getLife());
+            player2LivesLabel.setForeground(Color.RED);
+
+            statsPanel.add(player2ScoreLabel);
+            statsPanel.add(player2LivesLabel);
+        }
+
+        add(statsPanel);
 
         respawnTimer = new Timer(3000, e -> {
             respawnPlayer();
@@ -360,11 +394,25 @@ public class GameFrame4 extends JFrame {
         });
         enemyRespawnTimer.setRepeats(false);
 
+        powerUpSpawnTimer = new Timer(powerUpSpawnInterval, e -> {
+            spawnPowerUp();
+        });
+        powerUpSpawnTimer.start();
+
+
         setFocusable(true);
         requestFocus();
         setVisible(true);
         setResizable(false);
         startGame();
+    }
+
+    private void spawnPowerUp() {
+        if (powerUpList.size() > 0) {
+            int randomIndex = random.nextInt(powerUpList.size());
+            panel.add(powerUpList.get(randomIndex));
+            powerUpList.remove(powerUpList.get(randomIndex));
+        }
     }
 
     private void spawnRandomEnemyTank() {
@@ -441,23 +489,16 @@ public class GameFrame4 extends JFrame {
     private void updateGame() {
         handleInput();
         BulletManager.getInstance().updateBullets(panel);
-        if (isGameOver) {
-            return;
-        }
-        // Check for game over conditions
-        if (homeBase.getHealth() <= 0 ||
-                (playerOne.getLife() <= 0 && (numberOfPlayers == 1 || playerTwo.getLife() <= 0))) {
-            gameOver();
-            return;
-        }
+        updateDisplays();
+        checkLevelComplete();
+        checkGameOver();
 
-        // Handle respawn if players are inactive and have lives left
+
         if ((!playerOne.isActive() || (numberOfPlayers == 2 && !playerTwo.isActive())) &&
                 !respawnTimer.isRunning()) {
             respawnTimer.start();
         }
 
-        // Update enemy tanks and respawn if inactive
         Iterator<EnemyTank> iterator = enemyTanks.iterator();
         while (iterator.hasNext()) {
             EnemyTank enemyTank = iterator.next();
@@ -476,6 +517,37 @@ public class GameFrame4 extends JFrame {
 
         repaint();
     }
+
+    private void checkGameOver() {
+        if (isGameOver) {
+            return;
+        }
+        if (numberOfPlayers == 1) {
+            if (playerOne.getLife() <= 0) {
+                gameOver();
+            }
+        } else {
+            if (playerOne.getLife() <= 0 && playerTwo.getLife() <= 0) {
+                gameOver();
+            }
+        }
+        if (homeBase.getHealth() <= 0) {
+            gameOver();
+        }
+    }
+
+    private void updateDisplays() {
+        if (playerOne != null) {
+            player1ScoreLabel.setText("P1: " + playerOne.getPoint());
+            player1LivesLabel.setText("♥: " + playerOne.getLife());
+        }
+
+        if (numberOfPlayers == 2 && playerTwo != null) {
+            player2ScoreLabel.setText("P2: " + playerTwo.getPoint());
+            player2LivesLabel.setText("♥: " + playerTwo.getLife());
+        }
+    }
+
 
     private void handleInput() {
         if (playerOne != null && playerOne.isActive()) {
@@ -520,6 +592,43 @@ public class GameFrame4 extends JFrame {
             if (keyStateHandler.isKeyPressed(KeyEvent.VK_SPACE)) {
                 playerTwo.attempFire();
             }
+        }
+    }
+    private void checkLevelComplete() {
+        if (enemyTanks.isEmpty() && availableTanks.isEmpty()) {
+            gameTimer.stop();
+            if (respawnTimer != null) respawnTimer.stop();
+            if (enemyRespawnTimer != null) enemyRespawnTimer.stop();
+
+            gameWin();
+        }
+    }
+
+    private void gameWin() {
+        JLabel gameWinLabel = new JLabel("YOU WIN");
+        gameWinLabel.setFont(new Font("Arial", Font.BOLD, 48));
+        gameWinLabel.setForeground(Color.GREEN);
+        gameWinLabel.setBounds(panel.getWidth() / 2 - 150, panel.getHeight() / 2 - 50, 300, 100);
+        panel.add(gameWinLabel);
+
+        panel.setComponentZOrder(gameWinLabel, 0);
+        repaint();
+    }
+    public void setPlayer1State(int points, int lives, int tier) {
+        if (playerOne != null) {
+            playerOne.setPoint(points);
+            playerOne.setLife(lives);
+            playerOne.setTier(tier);
+            playerOne.updateTierState();
+        }
+    }
+
+    public void setPlayer2State(int points, int lives, int tier) {
+        if (playerTwo != null) {
+            playerTwo.setPoint(points);
+            playerTwo.setLife(lives);
+            playerTwo.setTier(tier);
+            playerTwo.updateTierState();
         }
     }
 

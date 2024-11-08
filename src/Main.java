@@ -1,4 +1,3 @@
-import view.GameFrame2;
 import view.MainScreen;
 
 public class Main {

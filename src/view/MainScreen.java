@@ -115,7 +115,7 @@ public class MainScreen extends JFrame {
         }
 
         private void openGameFrame(int players) {
-            new GameFrame2(players);  // Open GameFrame with specified number of players
+            new GameFrameLevel1(players);  // Open GameFrame with specified number of players
             MainScreen.this.dispose();  // Close the main screen
         }
     }
