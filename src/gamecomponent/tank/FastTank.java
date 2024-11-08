@@ -1,9 +1,7 @@
 package gamecomponent.tank;
 
 import gamecomponent.Position;
-import lombok.Data;
 
-@Data
 public class FastTank extends EnemyTank{
     public FastTank(Position position){
         super(position);

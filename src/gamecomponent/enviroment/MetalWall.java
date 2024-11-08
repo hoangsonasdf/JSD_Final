@@ -1,7 +1,6 @@
 package gamecomponent.enviroment;
 
 import gamecomponent.Position;
-import lombok.Data;
 
 import javax.swing.*;
 

@@ -5,17 +5,12 @@ import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.Enviroment;
 import gamecomponent.powerup.PowerUp;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
 
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class PlayerTank extends Tank {
     private int life;
     private int tier;
@@ -167,5 +162,45 @@ public class PlayerTank extends Tank {
         if (this.tier < 4) {
             this.tier++;
         }
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public int getTier() {
+        return tier;
+    }
+
+    public void setTier(int tier) {
+        this.tier = tier;
+    }
+
+    public boolean isShield() {
+        return shield;
+    }
+
+    public void setShield(boolean shield) {
+        this.shield = shield;
+    }
+
+    public boolean isUpgradedBullet() {
+        return upgradedBullet;
+    }
+
+    public void setUpgradedBullet(boolean upgradedBullet) {
+        this.upgradedBullet = upgradedBullet;
+    }
+
+    public PlayerTankEnum getPlayerTankEnum() {
+        return playerTankEnum;
+    }
+
+    public void setPlayerTankEnum(PlayerTankEnum playerTankEnum) {
+        this.playerTankEnum = playerTankEnum;
     }
 }

@@ -2,13 +2,11 @@ package gamecomponent.enviroment;
 
 import gamecomponent.Position;
 import gamecomponent.tank.ExplosionEffect;
-import lombok.Data;
 import ultil.SoundPlayer;
 
 import javax.swing.*;
 import java.awt.*;
 
-@Data
 public abstract class Enviroment extends JPanel {
     protected Position position;
     protected boolean canBulletPass;
@@ -55,5 +53,45 @@ public abstract class Enviroment extends JPanel {
             timer.setRepeats(false);
             timer.start();
         }
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public boolean isCanBulletPass() {
+        return canBulletPass;
+    }
+
+    public void setCanBulletPass(boolean canBulletPass) {
+        this.canBulletPass = canBulletPass;
+    }
+
+    public boolean isCanPass() {
+        return canPass;
+    }
+
+    public void setCanPass(boolean canPass) {
+        this.canPass = canPass;
+    }
+
+    public boolean isCanDestroy() {
+        return canDestroy;
+    }
+
+    public void setCanDestroy(boolean canDestroy) {
+        this.canDestroy = canDestroy;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 }

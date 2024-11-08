@@ -1,14 +1,12 @@
 package gamecomponent.enviroment;
 
 import gamecomponent.Position;
-import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 public class CompositeBrickWall {
     private final int COLS = 2;
     private final int ROWS = 2;
@@ -54,5 +52,33 @@ public class CompositeBrickWall {
 
     public Dimension getImageSize() {
         return imageSize;
+    }
+
+    public int getCOLS() {
+        return COLS;
+    }
+
+    public int getROWS() {
+        return ROWS;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public List<BrickWall> getBricks() {
+        return bricks;
+    }
+
+    public void setBricks(List<BrickWall> bricks) {
+        this.bricks = bricks;
+    }
+
+    public void setImageSize(Dimension imageSize) {
+        this.imageSize = imageSize;
     }
 }

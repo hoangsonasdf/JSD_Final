@@ -1,15 +1,9 @@
 package gamecomponent;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class HomeBase extends JPanel {
     private int health;
     private Position position;
@@ -32,5 +26,29 @@ public class HomeBase extends JPanel {
         if (image != null){
             g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);
         }
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 }

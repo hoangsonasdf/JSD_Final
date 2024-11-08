@@ -4,18 +4,12 @@ import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.Enviroment;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class EnemyTank extends Tank {
     private Random random = new Random();
 
@@ -101,4 +95,11 @@ public class EnemyTank extends Tank {
         }
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
 }

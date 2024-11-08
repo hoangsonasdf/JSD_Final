@@ -2,9 +2,6 @@ package gamecomponent.tank;
 
 import gamecomponent.Direction;
 import gamecomponent.Position;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import manager.BulletManager;
 import ultil.SoundPlayer;
 
@@ -13,9 +10,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public abstract class Tank extends JPanel {
     protected Direction direction;
     protected Position position;
@@ -202,6 +197,91 @@ public abstract class Tank extends JPanel {
         }
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
 
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
 
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getMovementSpeed() {
+        return movementSpeed;
+    }
+
+    public void setMovementSpeed(int movementSpeed) {
+        this.movementSpeed = movementSpeed;
+    }
+
+    public int getBulletSpeed() {
+        return bulletSpeed;
+    }
+
+    public void setBulletSpeed(int bulletSpeed) {
+        this.bulletSpeed = bulletSpeed;
+    }
+
+    public int getNumberOfBulletPerShoot() {
+        return numberOfBulletPerShoot;
+    }
+
+    public void setNumberOfBulletPerShoot(int numberOfBulletPerShoot) {
+        this.numberOfBulletPerShoot = numberOfBulletPerShoot;
+    }
+
+    public Map<Direction, Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Map<Direction, Image> images) {
+        this.images = images;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isShooting() {
+        return isShooting;
+    }
+
+    public void setShooting(boolean shooting) {
+        isShooting = shooting;
+    }
+
+    public long getLastFireTime() {
+        return lastFireTime;
+    }
+
+    public void setLastFireTime(long lastFireTime) {
+        this.lastFireTime = lastFireTime;
+    }
 }

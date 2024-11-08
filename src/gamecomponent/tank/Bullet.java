@@ -4,19 +4,13 @@ import gamecomponent.Direction;
 import gamecomponent.HomeBase;
 import gamecomponent.Position;
 import gamecomponent.enviroment.Enviroment;
-import gamecomponent.enviroment.MetalWall;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Bullet extends JPanel {
     private Position position;
     private Direction direction;
@@ -170,5 +164,53 @@ public class Bullet extends JPanel {
         }
 
         return collisions.toArray(new Component[0]);
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public Tank getShotBy() {
+        return shotBy;
+    }
+
+    public void setShotBy(Tank shotBy) {
+        this.shotBy = shotBy;
+    }
+
+    public Map<Direction, Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Map<Direction, Image> images) {
+        this.images = images;
     }
 }

@@ -2,19 +2,17 @@ package gamecomponent.powerup;
 
 import gamecomponent.Position;
 import gamecomponent.tank.PlayerTank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+
 public abstract class PowerUp extends JPanel {
     protected Position position;
     protected Image image;
+
+
     public PowerUp(Position position){
         this.position = position;
         this.setSize(getImageSize());
@@ -37,4 +35,20 @@ public abstract class PowerUp extends JPanel {
     }
 
     public abstract void active(PlayerTank tank);
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }
