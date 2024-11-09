@@ -10,6 +10,6 @@ public class River extends Enviroment{
         this.canPass = false;
         this.canDestroy = false;
         this.canBulletPass = true;
-        this.image = new ImageIcon("images/river.jpg").getImage();
+        this.image = new ImageIcon("images/water.png").getImage();
     }
 }

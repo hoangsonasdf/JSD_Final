@@ -99,6 +99,13 @@ public class GameFrameLevel3 extends JFrame {
         powerUpList.add(tankUp2);
 
         // Add Tanks
+        availableTanks.add(new BasicTank(new Position(240, 120)));
+        availableTanks.add(new BasicTank(new Position(40, 40)));
+        availableTanks.add(new ArmorTank(new Position(560, 40)));
+        availableTanks.add(new FastTank(new Position(40, 560)));
+        availableTanks.add(new PowerTank(new Position(560, 560)));
+
+        availableTanks.add(new BasicTank(new Position(240, 120)));
         availableTanks.add(new BasicTank(new Position(40, 40)));
         availableTanks.add(new ArmorTank(new Position(560, 40)));
         availableTanks.add(new FastTank(new Position(40, 560)));
@@ -182,6 +189,38 @@ public class GameFrameLevel3 extends JFrame {
         panel.setComponentZOrder(tree19, 1);
 
         Tree tree20 = new Tree(new Position(600, 520));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree21 = new Tree(new Position(280, 240));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree22 = new Tree(new Position(320, 240));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree23 = new Tree(new Position(240, 280));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree24 = new Tree(new Position(360, 280));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree25 = new Tree(new Position(240, 320));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree26 = new Tree(new Position(360, 320));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree27 = new Tree(new Position(280, 360));
+        panel.add(tree20);
+        panel.setComponentZOrder(tree20, 1);
+
+        Tree tree28 = new Tree(new Position(320, 360));
         panel.add(tree20);
         panel.setComponentZOrder(tree20, 1);
 

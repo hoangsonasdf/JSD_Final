@@ -27,8 +27,6 @@ public abstract class Enviroment extends JPanel {
         return new Dimension(40, 40);
     }
 
-
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

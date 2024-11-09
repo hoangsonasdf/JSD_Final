@@ -486,9 +486,16 @@ public class GameFrameLevel1 extends JFrame {
         }
 
         availableTanks.add(new BasicTank(new Position(280, 320)));
-        availableTanks.add(new ArmorTank(new Position(560, 600)));
+        availableTanks.add(new BasicTank(new Position(560, 600)));
         availableTanks.add(new FastTank(new Position(0, 40)));
         availableTanks.add(new PowerTank(new Position(280, 600)));
+
+        availableTanks.add(new BasicTank(new Position(280, 320)));
+        availableTanks.add(new BasicTank(new Position(560, 600)));
+        availableTanks.add(new FastTank(new Position(0, 40)));
+        availableTanks.add(new PowerTank(new Position(280, 600)));
+
+
 
         for (int i = 0; i < maxActiveTanks; i++) {
             spawnRandomEnemyTank();
