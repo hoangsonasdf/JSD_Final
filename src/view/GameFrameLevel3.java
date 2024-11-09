@@ -99,17 +99,17 @@ public class GameFrameLevel3 extends JFrame {
         powerUpList.add(tankUp2);
 
         // Add Tanks
-        availableTanks.add(new BasicTank(new Position(240, 120)));
-        availableTanks.add(new BasicTank(new Position(40, 40)));
-        availableTanks.add(new ArmorTank(new Position(560, 40)));
-        availableTanks.add(new FastTank(new Position(40, 560)));
-        availableTanks.add(new PowerTank(new Position(560, 560)));
+        availableTanks.add(new BasicTank(new Position(240, 120)));  //ok
+        availableTanks.add(new BasicTank(new Position(40, 40))); //ok
+        availableTanks.add(new ArmorTank(new Position(560, 40))); //ok
+        availableTanks.add(new FastTank(new Position(40, 560))); //ok
+        availableTanks.add(new PowerTank(new Position(560, 560))); //ok
 
-        availableTanks.add(new BasicTank(new Position(240, 120)));
-        availableTanks.add(new BasicTank(new Position(40, 40)));
-        availableTanks.add(new ArmorTank(new Position(560, 40)));
-        availableTanks.add(new FastTank(new Position(40, 560)));
-        availableTanks.add(new PowerTank(new Position(560, 560)));
+        availableTanks.add(new BasicTank(new Position(440, 480))); //ok
+        availableTanks.add(new BasicTank(new Position(160, 480))); //ok
+        availableTanks.add(new ArmorTank(new Position(160, 160))); //ok
+        availableTanks.add(new FastTank(new Position(440, 200))); //ok
+        availableTanks.add(new PowerTank(new Position(520, 320))); //ok
 
         // Add Trees
         Tree tree1 = new Tree(new Position(0, 0));

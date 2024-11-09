@@ -103,11 +103,11 @@ public class GameFrameLevel2 extends JFrame {
         availableTanks.add(new FastTank(new Position(40, 480)));
         availableTanks.add(new PowerTank(new Position(480, 560)));
 
-        availableTanks.add(new BasicTank(new Position(240, 40)));
-        availableTanks.add(new BasicTank(new Position(560, 160)));
-        availableTanks.add(new BasicTank(new Position(320, 360)));
-        availableTanks.add(new FastTank(new Position(40, 480)));
-        availableTanks.add(new PowerTank(new Position(480, 560)));
+        availableTanks.add(new BasicTank(new Position(440, 240)));
+        availableTanks.add(new BasicTank(new Position(280, 0)));
+        availableTanks.add(new BasicTank(new Position(320, 440)));
+        availableTanks.add(new FastTank(new Position(160, 0)));
+        availableTanks.add(new PowerTank(new Position(0, 160)));
 
         // add tree
         Tree tree1 = new Tree(new Position(280, 40));

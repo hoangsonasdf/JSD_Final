@@ -485,15 +485,15 @@ public class GameFrameLevel1 extends JFrame {
             panel.add(playerTwo);
         }
 
-        availableTanks.add(new BasicTank(new Position(280, 320)));
-        availableTanks.add(new BasicTank(new Position(560, 600)));
-        availableTanks.add(new FastTank(new Position(0, 40)));
-        availableTanks.add(new PowerTank(new Position(280, 600)));
+        availableTanks.add(new BasicTank(new Position(280, 320))); //ok
+        availableTanks.add(new BasicTank(new Position(560, 600))); //ok
+        availableTanks.add(new BasicTank(new Position(0, 40)));  //ok
+        availableTanks.add(new BasicTank(new Position(280, 600))); //ok
 
-        availableTanks.add(new BasicTank(new Position(280, 320)));
-        availableTanks.add(new BasicTank(new Position(560, 600)));
-        availableTanks.add(new FastTank(new Position(0, 40)));
-        availableTanks.add(new PowerTank(new Position(280, 600)));
+        availableTanks.add(new BasicTank(new Position(80, 0))); //ok
+        availableTanks.add(new BasicTank(new Position(200, 400))); //ok
+        availableTanks.add(new BasicTank(new Position(0, 280))); //ok
+        availableTanks.add(new BasicTank(new Position(600, 520))); //ok
 
 
 
